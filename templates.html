@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Templates — Krative</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@500;700&family=Cormorant+Garamond:wght@600&family=IBM+Plex+Serif:wght@500;600&family=JetBrains+Mono:wght@400;600&family=Fredoka:wght@500;600&family=Syne:wght@600;700&family=Newsreader:opsz,wght@6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A}
+body.light{--bg:#ffffff;--card:#f5f5f5;--border:#e5e5e5;--text:#111;--sub:#666;--nav:#ffffff}
+html,body{background:var(--bg)!important;color:var(--text)!important;transition:background 0.25s,color 0.25s}
+.navbar{background:var(--nav)!important;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 0;transition:background 0.25s,border-color 0.25s}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;display:grid;gap:0}
+.card:hover{transform:translateY(-4px);border-color:#444;box-shadow:0 12px 24px rgba(0,0,0,0.12)}
+.thumb{height:160px;display:grid;place-items:center;font-weight:800;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.card-content{padding:16px;display:grid;gap:12px}
+.meta{display:flex;justify-content:space-between;align-items:center}
+.meta b{font-size:13px;display:flex;gap:6px;align-items:center}
+.meta span{font-size:10px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;display:inline-flex;gap:4px;align-items:center;border:1px solid var(--border);padding:4px 8px;border-radius:100px}
+.desc{font-size:11px;color:var(--sub);line-height:1.5}
+.btn-white{width:100%;background:var(--text);color:var(--bg);border:none;padding:11px;border-radius:100px;font-weight:700;font-size:12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;justify-content:center;transition:0.25s}
+.btn-ghost{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:11px;border-radius:100px;font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;justify-content:center;transition:0.25s}
+.theme-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:0.25s}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr;gap:16px}}@media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head><body>
+<div class="container">
+<nav class="navbar">
+<div class="logo">Krative<span>.</span></div>
+<div style="display:flex;gap:8px;align-items:center">
+<button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button>
+<a href="dashboard.html" style="text-decoration:none"><button class="btn-white" style="width:auto;padding:8px 16px;display:inline-flex;gap:6px;align-items:center"><i class="ri-dashboard-line"></i> Dashboard</button></a>
+</div>
+</nav>
+
+<div style="padding:28px 0 20px;display:grid;gap:8px">
+<h2 style="font-size:30px;letter-spacing:-1px;line-height:1;display:flex;gap:10px;align-items:center"><i class="ri-layout-3-line" style="color:#8A6BB5"></i> Pick your template</h2>
+<p style="color:var(--sub);font-size:13px;display:flex;gap:6px;align-items:center"><i class="ri-user-3-line"></i> 12 designs for freelancers — devs, designers, writers, creators, photographers</p>
+</div>
+
+<div class="grid">
+<div class="card"><div class="thumb" style="background:#0A0A0A;color:#fff"><div style="display:grid;gap:6px;place-items:center"><i class="ri-code-s-slash-line" style="font-size:22px;color:#8A6BB5"></i><span style="font-size:15px">Minimal Dark</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-layout-line"></i> Minimal Dark</b><span><i class="ri-star-line"></i> Popular</span></div><p class="desc">Clean & centered. For developers, designers, and freelancers who want it simple.</p><button class="btn-white" onclick="chooseTemplate('Minimal Dark')"><i class="ri-check-line"></i> Use Minimal Dark</button></div></div>
+<div class="card"><div class="thumb" style="background:#111;color:#fff"><div style="display:flex;gap:10px;align-items:center"><div style="width:36px;height:36px;border-radius:8px;background:#1e1e1e;border:1px solid #333;display:grid;place-items:center"><i class="ri-briefcase-4-line"></i></div><span style="font-size:14px;font-weight:700">KRA-PRO</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-briefcase-line"></i> Kra-Pro Dark</b><span><i class="ri-vip-line"></i> Pro</span></div><p class="desc">Sidebar layout. For senior devs, product designers, consultants.</p><button class="btn-ghost" onclick="chooseTemplate('Kra-Pro Dark')"><i class="ri-arrow-right-line"></i> Use Kra-Pro</button></div></div>
+<div class="card"><div class="thumb" style="background:#fff;color:#000;font-family:'Playfair Display'"><div style="display:grid;gap:4px;place-items:center"><i class="ri-quill-pen-line" style="font-size:20px"></i><span style="font-size:16px;font-weight:700">EDITORIAL</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-font-size-2"></i> Bold Editorial</b><span><i class="ri-quill-pen-line"></i> Writer</span></div><p class="desc">Big serif typography. For writers, bloggers, content strategists.</p><button class="btn-ghost" onclick="chooseTemplate('Bold Editorial')"><i class="ri-arrow-right-line"></i> Use Editorial</button></div></div>
+<div class="card"><div class="thumb" style="background:linear-gradient(135deg,#8A6BB5,#D4BFFF);display:grid;place-items:center"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:60px"><div style="height:18px;background:rgba(255,255,255,0.9);border-radius:6px"></div><div style="height:18px;background:rgba(255,255,255,0.6);border-radius:6px"></div><div style="height:18px;background:rgba(255,255,255,0.6);border-radius:6px;grid-column:span 2"></div></div></div><div class="card-content"><div class="meta"><b><i class="ri-layout-grid-line"></i> Grid Studio</b><span><i class="ri-bento-line"></i> Bento</span></div><p class="desc">Bento grid. For UI designers, photographers, portfolio-heavy freelancers.</p><button class="btn-ghost" onclick="chooseTemplate('Grid Studio')"><i class="ri-arrow-right-line"></i> Use Grid</button></div></div>
+<div class="card"><div class="thumb" style="background:#0f172a;color:#cbd5e1"><div style="display:grid;gap:6px;place-items:center"><i class="ri-shield-keyhole-line" style="font-size:20px"></i><span style="font-family:'IBM Plex Serif';font-size:13px;font-weight:700">EXECUTIVE</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-award-line"></i> Formal Executive</b><span><i class="ri-briefcase-line"></i> Corporate</span></div><p class="desc">Clean & formal. For freelance PMs, corporate consultants, LinkedIn-first.</p><button class="btn-ghost" onclick="chooseTemplate('Neo Brutal')"><i class="ri-arrow-right-line"></i> Use Executive</button></div></div>
+<div class="card"><div class="thumb" style="background:#F5F3EF;color:#111"><div style="display:grid;gap:6px;place-items:center"><div style="width:44px;height:44px;border-radius:50%;border:1px solid #e5ddd3;display:grid;place-items:center"><i class="ri-vip-crown-line"></i></div><span style="font-family:'Cormorant Garamond';font-size:16px">Noir</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-vip-crown-line"></i> Noir Studio</b><span><i class="ri-sparkling-line"></i> Minimal</span></div><p class="desc">Soft luxury. For brand designers, stylists, aesthetic freelancers.</p><button class="btn-ghost" onclick="chooseTemplate('Noir Studio')"><i class="ri-arrow-right-line"></i> Use Noir</button></div></div>
+<div class="card"><div class="thumb" style="background:radial-gradient(circle at 30% 30%, #8A6BB5, #000)"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);display:grid;place-items:center;color:#fff"><i class="ri-rocket-2-line" style="font-size:20px"></i></div></div><div class="card-content"><div class="meta"><b><i class="ri-rocket-line"></i> Gradient Founder</b><span><i class="ri-flashlight-line"></i> Founder</span></div><p class="desc">Gradient glow. For indie hackers, no-code builders, startup freelancers.</p><button class="btn-ghost" onclick="chooseTemplate('Gradient Founder')"><i class="ri-arrow-right-line"></i> Use Gradient</button></div></div>
+<div class="card"><div class="thumb" style="background:#fff;color:#000;border:2px solid #000;border-radius:0;margin:12px;height:136px"><div style="display:flex;gap:8px;align-items:center"><div style="width:28px;height:28px;border:2px solid #000;display:grid;place-items:center"><i class="ri-hashtag"></i></div><span style="font-family:'JetBrains Mono';font-size:14px;font-weight:700">SWISS GRID</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-grid-line"></i> Swiss Grid</b><span><i class="ri-ruler-line"></i> Swiss</span></div><p class="desc">Mono & structural. For architects, UX researchers, minimal devs.</p><button class="btn-ghost" onclick="chooseTemplate('Swiss Grid')"><i class="ri-arrow-right-line"></i> Use Swiss</button></div></div>
+<div class="card"><div class="thumb" style="background:#fafaf9;color:#1c1917"><div style="display:flex;gap:8px;align-items:center;border:1px solid #e7e5e4;padding:8px 12px;border-radius:8px;background:#fff"><i class="ri-terminal-box-line"></i><span style="font-size:12px">Formal Ledger</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-article-line"></i> Formal Ledger</b><span><i class="ri-file-paper-line"></i> Resume</span></div><p class="desc">Paper & resume style. For freelance writers, editors, job seekers.</p><button class="btn-ghost" onclick="chooseTemplate('Terminal')"><i class="ri-arrow-right-line"></i> Use Ledger</button></div></div>
+<div class="card"><div class="thumb" style="background:linear-gradient(135deg,#FFD93D 0%,#FF6B9D 50%,#8A6BB5 100%)"><div style="width:48px;height:48px;border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;background:#111;display:grid;place-items:center;color:#fff;border:2px solid #111"><i class="ri-palette-line"></i></div></div><div class="card-content"><div class="meta"><b><i class="ri-palette-line"></i> Color Pop</b><span><i class="ri-fire-line"></i> Creator</span></div><p class="desc">Playful blob. For illustrators, animators, TikTok creators.</p><button class="btn-ghost" onclick="chooseTemplate('Color Pop')"><i class="ri-arrow-right-line"></i> Use Color Pop</button></div></div>
+<div class="card"><div class="thumb" style="background:#fff;display:flex;gap:8px;align-items:center;justify-content:center"><div style="width:32px;height:52px;background:#111;border:1px solid #111;display:grid;place-items:center;color:#fff"><i class="ri-newspaper-line"></i></div><div style="width:32px;height:52px;background:#f5f5f5;border:1px solid #111;display:grid;place-items:center"><i class="ri-image-line"></i></div></div><div class="card-content"><div class="meta"><b><i class="ri-newspaper-line"></i> Magazine</b><span><i class="ri-layout-2-line"></i> Story</span></div><p class="desc">Mag layout. For freelance journalists, bloggers, case-study designers.</p><button class="btn-ghost" onclick="chooseTemplate('Magazine')"><i class="ri-arrow-right-line"></i> Use Magazine</button></div></div>
+<div class="card"><div class="thumb" style="background:#0F0F0F;color:#fff"><div style="display:grid;gap:6px;place-items:center"><div style="width:48px;height:48px;border-radius:50%;border:1px solid #333;display:grid;place-items:center"><i class="ri-focus-3-line"></i></div><span style="letter-spacing:3px;font-size:13px;font-family:Syne">FOLIO</span></div></div><div class="card-content"><div class="meta"><b><i class="ri-focus-3-line"></i> Folio Circle</b><span><i class="ri-user-smile-line"></i> Artist</span></div><p class="desc">Big circle focus. For photographers, makeup artists, visual freelancers.</p><button class="btn-ghost" onclick="chooseTemplate('Folio Circle')"><i class="ri-arrow-right-line"></i> Use Folio</button></div></div>
+</div>
+<div style="height:32px"></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+const savedTheme=localStorage.getItem('krative_theme')||'dark';
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){
+  if(t==='light'){document.body.classList.add('light');themeBtn.innerHTML='<i class="ri-sun-line"></i>';}
+  else{document.body.classList.remove('light');themeBtn.innerHTML='<i class="ri-moon-line"></i>';}
+  localStorage.setItem('krative_theme',t);
+}
+applyTheme(savedTheme);
+themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
+function chooseTemplate(name){ localStorage.setItem('template',name); setTimeout(()=>{ if(localStorage.getItem('logged')==='yes') location.href='builder.html'; else location.href='auth.html'; },100); }
+</script>
+</body></html>

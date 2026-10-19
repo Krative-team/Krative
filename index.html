@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Krative — Portfolio Builder</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
+<style>
+:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A}
+body.light{--bg:#ffffff;--card:#f5f5f5;--border:#e5e5e5;--text:#111;--sub:#666;--nav:#ffffff}
+html, body{background:var(--bg) !important;color:var(--text) !important;transition:background 0.25s, color 0.25s}
+a{text-decoration:none !important}
+.navbar{background:var(--nav) !important;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:16px 0;transition:background 0.25s, border-color 0.25s}
+.hero{padding:60px 0 10px}
+.hero h1{font-size:36px;line-height:1.1;letter-spacing:-1px;color:var(--text);margin-top:30px}
+.hero h1 span{color:#8A6BB5}
+.hero p{color:var(--sub);font-size:14px;margin-top:16px;line-height:1.5;max-width:360px}
+.btn-row{display:flex;gap:10px;margin-top:22px}
+.new-portfolio-wrap{padding:0 0 12px 0;margin-top:20px}
+#createBtn{width:100%;padding:14px 16px;border-radius:144px;font-weight:600;font-size:14px;background:#8A6BB5;color:#fff;border:none;cursor:pointer;display:inline-flex;gap:6px;align-items:center;justify-content:center}
+.navbar-actions{display:flex;gap:8px;align-items:center}
+.theme-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:14px;z-index:999;transition:background 0.25s,color 0.25s,border-color 0.25s}
+.theme-btn i{font-size:14px}
+.labels-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.label-chip{font-size:10px;padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--sub);display:inline-flex;align-items:center;gap:4px}
+.btn-purple{background:transparent !important;color:#8A6BB5 !important;border:1.5px solid #8A6BB5 !important;padding:16px 26px !important;font-size:18px !important;border-radius:144px !important;font-weight:700 !important;min-width:170px;transition:0.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none !important}
+.btn-purple:hover{background:#8A6BB5 !important;color:#fff !important}
+.notes-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:24px}
+.note-square{aspect-ratio:1/1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;transition:background 0.25s,border-color 0.25s}
+.note-square h4{font-size:12px;color:var(--text)}
+.note-square p{font-size:10px;color:var(--sub);margin-top:6px}
+.note-icon{width:32px;height:32px;border-radius:10px;background:#8A6BB520;color:#8A6BB5;display:grid;place-items:center}
+.how-it-works{margin-top:30px;padding:20px;background:var(--card);border-radius:16px;border:1px solid var(--border);transition:background 0.25s,border-color 0.25s}
+.how-it-works h3{font-size:14px;color:var(--text)}
+.how-steps{margin-top:14px;display:grid;gap:10px}
+.how-step{display:flex;gap:12px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:10px 12px;transition:background 0.25s,border-color 0.25s}
+.how-step-img{width:44px;height:44px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;flex-shrink:0;font-size:20px;color:#8A6BB5}
+.how-step p{font-size:12px;color:var(--sub);line-height:1.4;margin:0}
+.how-step p b{color:var(--text);display:block;font-size:12px;margin-bottom:2px}
+.footer{margin-top:50px;padding:24px 16px;border-top:1px solid var(--border);text-align:center;background:var(--card);border-radius:16px 16px 0 0;transition:background 0.25s,border-color 0.25s}
+.footer h3{font-size:11px;color:#8A6BB5}
+.footer h3 span{color:var(--text)}
+.footer p{font-size:11px;color:var(--sub);margin-top:6px}
+.footer small{display:block;margin-top:10px;font-size:11px;color:var(--sub);opacity:0.6}
+#logoutModal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:none;place-items:center;z-index:9999;padding:20px}
+#logoutModal.show{display:grid}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;max-width:320px;width:100%;text-align:center;transition:background 0.25s}
+.modal-box h4{font-size:15px;color:var(--text);margin-bottom:6px}
+.modal-box p{font-size:12px;color:var(--sub);line-height:1.5}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+.modal-actions button{flex:1;padding:12px;border-radius:100px;border:none;font-weight:700;font-size:13px;cursor:pointer}
+.btn-cancel{background:var(--bg);border:1px solid var(--border) !important;color:var(--text)}
+.btn-confirm-danger{background:#ff4d4d!important;color:#fff!important}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="navbar"><div class="logo">Krative<span>.</span></div><div class="navbar-actions"><button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button><button class="btn-white" id="authBtn">Login</button></div></nav>
+
+<div class="new-portfolio-wrap">
+<a id="createLink" href="templates.html" style="text-decoration:none !important"><button id="createBtn"><i class="ri-compass-3-line"></i> Explore Templates</button></a>
+<div class="labels-row"><span class="label-chip"><i class="ri-vip-diamond-line"></i> Premium Templates</span><span class="label-chip"><i class="ri-palette-line"></i> No-code Customizable</span><span class="label-chip"><i class="ri-share-line"></i> Sharable Link</span><span class="label-chip"><i class="ri-flashlight-line"></i> Publish in 2 mins</span></div>
+</div>
+
+<div class="page active" id="homePage">
+<div class="hero"><h1>Wants to build a portfolio<br>that gets you<br><span>hired?</span></h1><p>Use this amazing Portfolio Builder. <strong>Krative</strong> is a minimal portfolio builder for freelancers — devs, designers, writers, creators. Choose a template, fill info, publish in 2 minutes.</p>
+<div class="btn-row"><a id="mainActionLink" href="templates.html" style="text-decoration:none !important"><button id="mainActionBtn" class="btn-purple">Explore Templates <i class="ri-arrow-right-line"></i></button></a></div>
+
+<div class="notes-grid"><div class="note-square"><div class="note-icon"><i class="ri-layout-line"></i></div><div><h4>Premium Templates</h4><p>12 freelancer designs.</p></div></div><div class="note-square"><div class="note-icon"><i class="ri-quill-pen-line"></i></div><div><h4>100% Customizable</h4><p>No code</p></div></div><div class="note-square"><div class="note-icon"><i class="ri-timer-line"></i></div><div><h4>Quick Publish</h4><p>One click</p></div></div></div></div>
+
+<div class="how-it-works"><h3>How it works</h3>
+<div class="how-steps">
+<div class="how-step"><div class="how-step-img"><i class="ri-user-add-line"></i></div><p><b>Register an account</b> Register a free Krative account in seconds</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-login-circle-line"></i></div><p><b>Login</b> Access your personal dashboard securely</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-layout-3-line"></i></div><p><b>Choose a template</b> Pick from our premium templates</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-quill-pen-line"></i></div><p><b>Build your portfolio</b> Customize with easy steps</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-eye-line"></i></div><p><b>Check the preview</b> See how it looks live</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-rocket-2-line"></i></div><p><b>Publish & get a link</b> Publish your portfolio with one click and get a link— Share with recruiters</p></div>
+<div class="how-step"><div class="how-step-img"><i class="ri-dashboard-line"></i></div><p><b>Access Dashboard</b> Manage your portfolios through a User-friendly dashboard</p></div>
+</div></div>
+
+<div class="footer"><h3>Krative <span>— Built by Krative-team</span></h3><p>Free, quick publish, no code required</p><small><i class="ri-copyright-line"></i> 2026 Krative. All rights reserved.</small></div>
+</div>
+</div>
+
+<div id="logoutModal"><div class="modal-box"><h4><i class="ri-logout-box-line" style="color:#ff4d4d"></i> Logout?</h4><p>Are you sure you want to logout?</p><div class="modal-actions"><button class="btn-cancel" id="cancelLogout">Cancel</button><button class="btn-confirm-danger" id="confirmLogout" style="background:#ff4d4d;color:#fff"><i class="ri-logout-box-line"></i> Yes, Logout</button></div></div></div>
+
+<script src="config.js"></script>
+<script>
+try{ initSupabase(); }catch(e){}
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){
+  if(t==='light'){ document.body.classList.add('light'); themeBtn.innerHTML='<i class="ri-sun-line"></i>'; }
+  else { document.body.classList.remove('light'); themeBtn.innerHTML='<i class="ri-moon-line"></i>'; }
+  localStorage.setItem('krative_theme',t);
+}
+applyTheme(localStorage.getItem('krative_theme')||'dark');
+themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
+window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) applyTheme(e.newValue); });
+window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
+const logged=localStorage.getItem('logged')==='yes';
+document.getElementById('authBtn').innerText=logged?'Logout':'Login';
+const createLink=document.getElementById('createLink');
+const createBtn=document.getElementById('createBtn');
+if(logged){
+  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Proceed to Dashboard';
+  createLink.href='dashboard.html';
+}
+const modal=document.getElementById('logoutModal');
+document.getElementById('authBtn').onclick=()=>{
+  if(logged){ modal.classList.add('show'); }
+  else { location.href='auth.html'; }
+};
+document.getElementById('cancelLogout').onclick=()=> modal.classList.remove('show');
+modal.addEventListener('click',(e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+document.getElementById('confirmLogout').onclick=()=>{ localStorage.clear(); location.href='index.html'; };
+</script>
+</body>
+</html>

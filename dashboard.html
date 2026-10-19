@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Dashboard — Krative</title><link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A}
+body.light{--bg:#ffffff;--card:#f5f5f5;--border:#e5e5e5;--text:#111;--sub:#666;--nav:#ffffff}
+html,body{background:var(--bg)!important;color:var(--text)!important;transition:background 0.25s,color 0.25s}
+.navbar{background:var(--nav)!important;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 0;transition:background 0.25s,border-color 0.25s}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:24px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+.stat h3{font-size:22px}.stat p{font-size:11px;color:var(--sub);margin-top:4px}
+.controls{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.controls input,.controls select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:100px;font-size:13px;outline:none}
+.controls input{flex:1;min-width:200px}
+.port-list{margin-top:18px;display:grid;gap:12px}
+.port-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.port-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn{padding:8px 14px;border-radius:100px;font-weight:700;font-size:11px;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:4px}
+.btn-white{background:var(--text);color:var(--bg)}
+.btn-ghost{background:var(--card);color:var(--text);border:1px solid var(--border) !important}
+.btn-purple{background:transparent;color:#8A6BB5;border:1.5px solid #8A6BB5;padding:10px 20px;border-radius:100px;font-weight:700;font-size:13px;cursor:pointer}
+.btn-danger{background:transparent;color:#ff4d4d;border:1px solid #ff4d4d}
+.theme-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:0.25s;font-size:14px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);display:none;place-items:center;z-index:9999;padding:20px}
+.modal-bg.show{display:grid}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;max-width:380px;width:100%}
+.modal-box h4{font-size:15px;color:var(--text);margin-bottom:6px;text-align:center}
+.modal-box p{font-size:12px;color:var(--sub);line-height:1.5;text-align:center}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+.modal-actions button{flex:1;padding:12px;border-radius:100px;border:none;font-weight:700;font-size:13px;cursor:pointer}
+.btn-cancel{background:var(--bg);border:1px solid var(--border) !important;color:var(--text)}
+.btn-confirm{background:var(--text);color:var(--bg)}
+.btn-confirm-danger{background:#ff4d4d!important;color:#fff!important}
+.modal-box input{width:100%;margin-top:14px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:12px;font-size:13px}
+#viewer{position:fixed;inset:0;background:var(--bg);z-index:10000;display:none;flex-direction:column}
+#viewer.show{display:flex}
+.viewer-top{height:56px;display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid var(--border);background:var(--card)}
+#viewerFrame{flex:1;width:100%;border:none;background:var(--bg)}
+.view-meta{display:inline-flex;align-items:center;gap:4px;color:var(--sub);font-size:11px}
+</style></head><body>
+<div class="container">
+<nav class="navbar">
+<div class="logo">Krative<span>.</span></div><div style="display:flex;gap:8px"><button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button><button class="btn btn-white" id="logoutBtn"><i class="ri-logout-box-line"></i> Logout</button></div>
+</nav>
+<div style="padding:30px 0 10px">
+<h1 style="font-size:32px;letter-spacing:-1px">Hey, <span id="uName" style="color:#8A6BB5">Creator</span></h1>
+<p style="color:var(--sub);font-size:13px;margin-top:6px">You built something amazing today</p>
+<div class="dash-grid">
+<div class="stat"><h3 id="totalPort">0</h3><p>Total portfolios</p></div>
+<div class="stat"><h3>12</h3><p>Available Templates</p></div>
+<div class="stat"><h3 id="totalViews">0</h3><p>Total views</p></div>
+</div>
+<div class="controls">
+<input id="searchInput" placeholder="Search portfolios..." oninput="renderList()"/>
+<select id="sortSelect" onchange="renderList()">
+<option value="" disabled selected>Sort by</option>
+<option value="newest">Newest first</option>
+<option value="oldest">Oldest first</option>
+<option value="nameAZ">Name A-Z</option>
+<option value="nameZA">Name Z-A</option>
+</select>
+<a href="templates.html"><button class="btn-purple"><i class="ri-add-line"></i> New</button></a>
+</div>
+<div class="port-list" id="portList"><p style="color:var(--sub);font-size:13px"><i class="ri-loader-4-line"></i> Loading portfolios...</p></div>
+</div></div>
+
+<div id="logoutModal" class="modal-bg"><div class="modal-box"><h4><i class="ri-logout-box-line" style="color:#ff4d4d"></i> Logout?</h4><p>Are you sure you want to logout?</p><div class="modal-actions"><button class="btn-cancel" id="cancelLogout">Cancel</button><button class="btn-confirm-danger" id="confirmLogout" style="background:#ff4d4d;color:#fff"><i class="ri-logout-box-line"></i> Yes, Logout</button></div></div></div>
+<div id="deleteModal" class="modal-bg"><div class="modal-box"><h4 style="color:#ff4d4d"><i class="ri-delete-bin-line"></i> Delete Portfolio?</h4><p id="deleteText">This cannot be undone.</p><div class="modal-actions"><button class="btn-cancel" id="cancelDelete">Cancel</button><button class="btn-confirm-danger" id="confirmDelete">Delete Forever</button></div><p id="deleteError" style="display:none;color:#ff4d4d;font-size:11px;margin-top:10px;text-align:center"></p></div></div>
+<div id="renameModal" class="modal-bg"><div class="modal-box"><h4><i class="ri-edit-line"></i> Rename Portfolio</h4><input id="renameInput" placeholder="New name"/><div class="modal-actions"><button class="btn-cancel" id="cancelRename">Cancel</button><button class="btn-confirm" id="confirmRename">Save</button></div><p id="renameError" style="display:none;color:#ff4d4d;font-size:11px;margin-top:10px;text-align:center"></p></div></div>
+<div id="slugModal" class="modal-bg"><div class="modal-box"><h4><i class="ri-link"></i> Edit Custom Link (Slug)</h4><input id="slugInput" placeholder="my-custom-slug"/><p id="slugStatus" style="font-size:11px;margin-top:8px;color:var(--sub)">krative.com/portfolio.html?user=</p><div class="modal-actions"><button class="btn-cancel" id="cancelSlug">Cancel</button><button class="btn-confirm" id="confirmSlug">Save Slug</button></div><p id="slugError" style="display:none;color:#ff4d4d;font-size:11px;margin-top:10px;text-align:center"></p></div></div>
+<div id="viewer"><div class="viewer-top"><b id="viewerTitle">Preview</b><div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="copyViewerLink()"><i class="ri-file-copy-line"></i> Copy link</button><button class="btn btn-white" onclick="openViewerNewTab()"><i class="ri-external-link-line"></i> Open</button><button class="btn" style="background:#ff4d4d;color:#fff" onclick="closeViewer()"><i class="ri-close-line"></i> Close</button></div></div><iframe id="viewerFrame"></iframe></div>
+
+<script src="config.js"></script>
+<script>
+if(localStorage.getItem('logged')!=='yes') location.href='auth.html';
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){ if(t==='light'){document.body.classList.add('light');themeBtn.innerHTML='<i class="ri-sun-line"></i>';}else{document.body.classList.remove('light');themeBtn.innerHTML='<i class="ri-moon-line"></i>';} localStorage.setItem('krative_theme',t); }
+applyTheme(localStorage.getItem('krative_theme')||'dark');
+themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
+window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) applyTheme(e.newValue); });
+window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
+
+// USERNAME ONLY - not full name
+document.getElementById('uName').innerText=localStorage.getItem('username')||'Creator';
+
+const logoutModal=document.getElementById('logoutModal');
+document.getElementById('logoutBtn').onclick=()=> logoutModal.classList.add('show');
+document.getElementById('cancelLogout').onclick=()=> logoutModal.classList.remove('show');
+logoutModal.addEventListener('click',e=>{ if(e.target===logoutModal) logoutModal.classList.remove('show'); });
+document.getElementById('confirmLogout').onclick=()=>{ localStorage.clear(); location.href='index.html'; };
+let currentData=[], deleteSlug=null, renameSlug=null, slugEditOld=null, currentViewerLink='';
+const deleteModal=document.getElementById('deleteModal');
+document.getElementById('cancelDelete').onclick=()=>{ deleteModal.classList.remove('show'); deleteSlug=null; };
+deleteModal.addEventListener('click',e=>{ if(e.target===deleteModal){ deleteModal.classList.remove('show'); }});
+function askDelete(slug,name){ deleteSlug=slug; document.getElementById('deleteText').innerHTML=`Delete <b>${name}</b>?`; deleteModal.classList.add('show'); }
+document.getElementById('confirmDelete').onclick=async()=>{ const btn=document.getElementById('confirmDelete'); btn.innerHTML='<i class="ri-loader-4-line"></i> Deleting...'; btn.disabled=true; try{ const {error}=await supabaseClient.from('portfolios').delete().eq('slug',deleteSlug); if(error) throw error; deleteModal.classList.remove('show'); loadPortfolios(); }catch(e){ document.getElementById('deleteError').style.display='block'; document.getElementById('deleteError').innerText=e.message; } finally{ btn.innerText='Delete Forever'; btn.disabled=false; }};
+const renameModal=document.getElementById('renameModal');
+document.getElementById('cancelRename').onclick=()=>{ renameModal.classList.remove('show'); };
+renameModal.addEventListener('click',e=>{ if(e.target===renameModal) renameModal.classList.remove('show'); });
+function askRename(slug,currentName){ renameSlug=slug; document.getElementById('renameInput').value=currentName; renameModal.classList.add('show'); setTimeout(()=>document.getElementById('renameInput').focus(),100); }
+document.getElementById('confirmRename').onclick=async()=>{ const newName=document.getElementById('renameInput').value.trim(); if(!newName) return; const btn=document.getElementById('confirmRename'); btn.innerText='Saving...'; try{ const {error}=await supabaseClient.from('portfolios').update({name:newName}).eq('slug',renameSlug); if(error) throw error; renameModal.classList.remove('show'); loadPortfolios(); }catch(e){ const er=document.getElementById('renameError'); er.style.display='block'; er.innerText=e.message; } finally{ btn.innerText='Save'; }};
+const slugModal=document.getElementById('slugModal');
+document.getElementById('cancelSlug').onclick=()=> slugModal.classList.remove('show');
+slugModal.addEventListener('click',e=>{ if(e.target===slugModal) slugModal.classList.remove('show'); });
+function askEditSlug(oldSlug){ slugEditOld=oldSlug; document.getElementById('slugInput').value=oldSlug; document.getElementById('slugStatus').innerText='krative.com/portfolio.html?user='+oldSlug; document.getElementById('slugError').style.display='none'; slugModal.classList.add('show'); }
+document.getElementById('slugInput').addEventListener('input',()=>{ const v=document.getElementById('slugInput').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,''); document.getElementById('slugStatus').innerText='krative.com/portfolio.html?user='+v; });
+document.getElementById('confirmSlug').onclick=async()=>{ const raw=document.getElementById('slugInput').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-'); const errBox=document.getElementById('slugError'); if(!raw){ errBox.style.display='block'; errBox.innerText='Enter a slug'; return; } if(raw===slugEditOld){ slugModal.classList.remove('show'); return; } const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',raw).maybeSingle(); if(exists){ errBox.style.display='block'; errBox.innerText='Slug already taken: '+raw; return; } const btn=document.getElementById('confirmSlug'); btn.innerText='Saving...'; btn.disabled=true; try{ const { error } = await supabaseClient.from('portfolios').update({slug:raw}).eq('slug',slugEditOld); if(error) throw error; slugModal.classList.remove('show'); loadPortfolios(); }catch(e){ errBox.style.display='block'; errBox.innerText=e.message; } finally{ btn.innerText='Save Slug'; btn.disabled=false; } };
+async function duplicatePort(slug){ const orig=currentData.find(p=>p.slug===slug); if(!orig) return; if(!confirm(`Duplicate "${orig.name}"?`)) return; const newSlug=orig.name.toLowerCase().replaceAll(' ','-').replace(/[^a-z0-9-]/g,'')+'-'+Math.floor(Math.random()*9000+1000); const payload={...orig}; delete payload.id; delete payload.created_at; payload.slug=newSlug; payload.name=orig.name+' Copy'; payload.views=0; try{ const {error}=await supabaseClient.from('portfolios').insert(payload); if(error) throw error; loadPortfolios(); }catch(e){ alert(e.message); } }
+function viewPort(slug,name){ currentViewerLink=location.origin+`/portfolio.html?user=${slug}`; document.getElementById('viewerTitle').innerText=name||slug; document.getElementById('viewerFrame').src=`portfolio.html?user=${slug}`; document.getElementById('viewer').classList.add('show'); document.body.style.overflow='hidden'; }
+function closeViewer(){ document.getElementById('viewer').classList.remove('show'); document.getElementById('viewerFrame').src=''; document.body.style.overflow=''; }
+function openViewerNewTab(){ if(currentViewerLink) window.open(currentViewerLink,'_blank'); }
+function copyViewerLink(){ navigator.clipboard.writeText(currentViewerLink); alert('Link copied!'); }
+function renderList(){ const q=document.getElementById('searchInput').value.toLowerCase(); const sort=document.getElementById('sortSelect').value; let filtered=currentData.filter(p=> (p.name||'').toLowerCase().includes(q) || p.slug.toLowerCase().includes(q) || (p.template||'').toLowerCase().includes(q)); if(sort==='newest') filtered.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)); if(sort==='oldest') filtered.sort((a,b)=> new Date(a.created_at)-new Date(b.created_at)); if(sort==='nameAZ') filtered.sort((a,b)=> (a.name||'').localeCompare(b.name||'')); if(sort==='nameZA') filtered.sort((a,b)=> (b.name||'').localeCompare(a.name||'')); if(sort==='') filtered.sort((a,b)=> new Date(b.created_at)-new Date(a.created_at)); const list=document.getElementById('portList'); if(!filtered.length){ list.innerHTML=`<div style="background:var(--card);border:1px dashed var(--border);border-radius:16px;padding:30px;text-align:center"><p style="color:var(--sub)"><i class="ri-inbox-line"></i> No results for "${q}"</p></div>`; return; } list.innerHTML=filtered.map(p=>{ const safe=(p.name||'').replace(/'/g,"\\'"); const date=new Date(p.created_at).toLocaleDateString(); return `<div class="port-item"><div><b style="font-size:14px">${p.name||p.slug}</b><p class="view-meta"><i class="ri-eye-line"></i> ${p.views||0} views • ${p.template||''} • ${p.slug} • ${date}</p></div><div class="port-actions"><button class="btn btn-white" onclick="viewPort('${p.slug}','${safe}')"><i class="ri-eye-line"></i> View</button><button class="btn btn-ghost" onclick="editPort('${p.slug}')"><i class="ri-edit-line"></i> Edit</button><button class="btn btn-ghost" onclick="askEditSlug('${p.slug}')"><i class="ri-link"></i> Link</button><button class="btn btn-ghost" onclick="askRename('${p.slug}','${safe}')"><i class="ri-text-block"></i> Rename</button><button class="btn btn-ghost" onclick="duplicatePort('${p.slug}')"><i class="ri-file-copy-line"></i> Duplicate</button><button class="btn btn-danger" onclick="askDelete('${p.slug}','${safe}')"><i class="ri-delete-bin-line"></i> Delete</button></div></div>`; }).join(''); }
+async function loadPortfolios(){ try{ initSupabase(); const email=localStorage.getItem('userEmail'); const {data,error}=await supabaseClient.from('portfolios').select('*').eq('owner_email',email).order('created_at',{ascending:false}); if(error) throw error; currentData=data||[]; document.getElementById('totalPort').innerText=currentData.length; const totalViews=currentData.reduce((s,p)=> s+(p.views||0),0); document.getElementById('totalViews').innerText=totalViews.toLocaleString(); renderList(); }catch(e){ document.getElementById('portList').innerHTML='<p style="color:var(--sub)">Could not load: '+e.message+'</p>'; } }
+loadPortfolios();
+function editPort(slug){ localStorage.setItem('editSlug',slug); location.href='builder.html?edit='+slug; }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeViewer(); logoutModal.classList.remove('show'); deleteModal.classList.remove('show'); renameModal.classList.remove('show'); slugModal.classList.remove('show'); }});
+</script></body></html>

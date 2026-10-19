@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Auth — Krative</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
+:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--input:#0A0A0A}
+body.light{--bg:#fff;--card:#f5f5f5;--border:#e5e5e5;--text:#111;--sub:#666;--input:#fff}
+body{background:var(--bg)!important;color:var(--text)!important;min-height:100vh;transition:.25s}
+.auth-wrap{max-width:440px;margin:0 auto;padding:24px 20px 40px}
+.logo{font-size:26px;font-weight:800;text-align:center;margin:16px 0 4px;letter-spacing:-1px;color:var(--text)}.logo span{color:#8A6BB5}
+.subtitle{text-align:center;font-size:13px;color:var(--sub);margin-bottom:20px}
+.tabs{display:flex;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:4px;margin-bottom:22px}
+.tabs button{flex:1;padding:11px;border-radius:100px;border:none;background:transparent;color:var(--sub);cursor:pointer;font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center;justify-content:center}
+.tabs button.active{background:var(--text);color:var(--bg)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;transition:.25s}
+label{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin:14px 0 6px;display:block;font-weight:600}
+input{width:100%;background:var(--input);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:12px;font-size:14px;outline:none;transition:.25s}
+input:focus{border-color:#8A6BB5}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.pass-wrap{position:relative}.pass-wrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--sub);font-size:11px;font-weight:700;display:flex;gap:4px;align-items:center}
+.btn{width:100%;padding:13px;border-radius:100px;border:none;font-weight:800;cursor:pointer;margin-top:16px;font-size:14px;display:flex;gap:6px;align-items:center;justify-content:center}
+.btn-primary{background:#8A6BB5;color:#fff}
+.hidden{display:none!important}
+.check{font-size:12px;color:var(--sub);display:flex;gap:8px;align-items:center;margin-top:14px}
+.link{color:#8A6BB5;cursor:pointer;font-size:12px;font-weight:600;display:inline-flex;gap:4px;align-items:center}
+.msg{font-size:13px;margin-top:12px;padding:10px 12px;border-radius:10px;display:none}
+.msg.err{background:#1a1111;color:#ff7a7a;border:1px solid #331a1a} .msg.ok{background:#0f1a14;color:#4ade80;border:1px solid #143322}
+.theme-btn{position:fixed;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:14px;z-index:999}
+.terms-wrap{margin-top:14px}
+.terms-trigger{font-size:12px;color:var(--sub);display:flex;gap:8px;align-items:center;cursor:pointer}
+.terms-trigger input{width:auto}
+.terms-trigger b{color:#8A6BB5;font-weight:700;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+.terms-dropdown{display:none;margin-top:10px;background:var(--input);border:1px solid var(--border);border-radius:12px;max-height:220px;overflow-y:auto;padding:14px;font-size:11px;line-height:1.6;color:var(--sub)}
+.terms-dropdown.show{display:block}
+.terms-dropdown h4{font-size:12px;color:var(--text);margin:12px 0 6px} .terms-dropdown h4:first-child{margin-top:0}
+.terms-dropdown ul{padding-left:16px;margin-top:6px;display:grid;gap:4px}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button>
+<div class="auth-wrap">
+<div class="logo">Krative<span>.</span></div>
+<p id="authSubtitle" class="subtitle">Login your <span style="color:#8A6BB5">Krative</span> account</p>
+
+<div class="tabs">
+<button id="tabLogin" class="active" onclick="switchTab('login')"><i class="ri-login-box-line"></i> Login</button>
+<button id="tabReg" onclick="switchTab('register')"><i class="ri-user-add-line"></i> Register</button>
+</div>
+
+<div id="loginForm" class="card">
+<label>Username or Email</label>
+<input id="lUsername" placeholder="Username or Email"/>
+<label>Password</label>
+<div class="pass-wrap"><input id="lPass" type="password" placeholder="••••••••"/><span onclick="togglePass('lPass')"><i class="ri-eye-line"></i> Show</span></div>
+<div style="display:flex;justify-content:space-between;margin-top:14px;align-items:center">
+<label class="check" style="margin:0"><input type="checkbox" id="remember"/> Remember me</label>
+<span class="link" onclick="forgotPass()"><i class="ri-lock-line"></i> Forgot?</span>
+</div>
+<button class="btn btn-primary" id="loginBtn" onclick="doLogin()"><i class="ri-login-circle-line"></i> Login</button>
+<p style="text-align:center;margin-top:18px;font-size:12px;color:var(--sub)">No account? <span class="link" onclick="switchTab('register')">Create one</span></p>
+<div id="loginErr" class="msg err"></div><div id="loginOk" class="msg ok"></div>
+</div>
+
+<div id="regForm" class="card hidden">
+<div class="row"><div><label>Full Name *</label><input id="rName" placeholder="Samuel Adeyemi"/></div><div><label>Username *</label><input id="rUsername" placeholder="sam01"/></div></div>
+<label>Phone *</label><input id="rPhone" placeholder="+234 801 234 5678"/>
+<label>Email *</label><input id="rEmail" placeholder="samuel@gmail.com"/>
+<div class="row"><div><label>Password *</label><div class="pass-wrap"><input id="rPass" type="password" placeholder="Min 6 chars"/><span onclick="togglePass('rPass')"><i class="ri-eye-line"></i> Show</span></div></div><div><label>Confirm *</label><div class="pass-wrap"><input id="rConfirm" type="password" placeholder="Confirm"/><span onclick="togglePass('rConfirm')"><i class="ri-eye-line"></i> Show</span></div></div></div>
+
+<div class="terms-wrap">
+<label class="terms-trigger"><input type="checkbox" id="agree"/> I agree to <b onclick="toggleTerms(event)"><i class="ri-file-list-line"></i> Terms & Privacy <i id="termsIcon" class="ri-arrow-down-s-line"></i></b></label>
+<div id="termsDropdown" class="terms-dropdown">
+<h4><i class="ri-shield-check-line"></i> 1. Acceptance</h4>
+<p>By creating a Krative account, you agree to our Terms and Privacy Policy. Krative is a portfolio builder for freelancers.</p>
+<h4><i class="ri-user-settings-line"></i> 2. Your Account</h4>
+<ul><li>You must provide accurate info (name, email, username).</li><li>You are responsible for password security.</li><li>One account per person.</li></ul>
+<h4><i class="ri-copyright-line"></i> 3. Content</h4>
+<ul><li>You own your portfolio content.</li><li>Don't upload illegal, hateful, or stolen content.</li><li>We can remove portfolios that violate rules.</li></ul>
+<h4><i class="ri-lock-2-line"></i> 4. Privacy</h4>
+<ul><li>We store your email, name, username, portfolio data in Supabase.</li><li>We don't sell your data.</li><li>Public portfolios are visible via your slug link.</li></ul>
+<h4><i class="ri-delete-bin-line"></i> 5. Termination</h4>
+<p>We can suspend accounts that abuse, spam, or violate terms. You can delete your portfolio anytime from dashboard.</p>
+<h4><i class="ri-information-line"></i> 6. Disclaimer</h4>
+<p>Krative is free, provided as-is. We are not liable for job outcomes. Keep backups of your content.</p>
+<p style="margin-top:12px;font-size:10px;color:#8A6BB5"><i class="ri-calendar-line"></i> Last updated: May 2026 • Contact: etoabasis@gmail.com</p>
+</div>
+</div>
+
+<button class="btn btn-primary" id="regBtn" onclick="doRegister()"><i class="ri-user-add-line"></i> Create Account</button>
+<p style="text-align:center;margin-top:18px;font-size:12px;color:var(--sub)">Have account? <span class="link" onclick="switchTab('login')">Login</span></p>
+<div id="regErr" class="msg err"></div><div id="regOk" class="msg ok"></div>
+</div>
+
+<div id="forgotBox" class="card hidden" style="margin-top:16px">
+<h3 style="font-size:16px;color:var(--text)"><i class="ri-lock-password-line"></i> Reset Password</h3>
+<p style="font-size:12px;color:var(--sub);margin-top:4px">Enter username to find account</p>
+<input id="fUsername" placeholder="your username" style="margin-top:12px"/>
+<div id="forgotMsg" class="msg ok" style="margin-top:12px"></div>
+<button class="btn btn-primary" onclick="sendReset()"><i class="ri-search-line"></i> Find Account</button>
+</div>
+</div>
+
+<script>
+const SUPABASE_URL='https://pfrpgijjqajwuhyfcdgw.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmcnBnaWpqcWFqd3VoeWZjZGd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNjMzNzksImV4cCI6MjEwNzYzOTM3OX0.T9aMtCBX7RJwhJr6RXMVjhQKnPTNX_BNfuLXle9z5go';
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t){ if(t==='light'){document.body.classList.add('light');themeBtn.innerHTML='<i class="ri-sun-line"></i>';}else{document.body.classList.remove('light');themeBtn.innerHTML='<i class="ri-moon-line"></i>';} localStorage.setItem('krative_theme',t); }
+applyTheme(localStorage.getItem('krative_theme')||'dark');
+themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
+window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) applyTheme(e.newValue); });
+window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
+
+function toggleTerms(e){ if(e) e.preventDefault(); const dd=document.getElementById('termsDropdown'); const icon=document.getElementById('termsIcon'); dd.classList.toggle('show'); icon.className=dd.classList.contains('show')?'ri-arrow-up-s-line':'ri-arrow-down-s-line'; }
+function switchTab(t){ document.getElementById('loginForm').classList.toggle('hidden',t!=='login'); document.getElementById('regForm').classList.toggle('hidden',t==='login'); document.getElementById('tabLogin').classList.toggle('active',t==='login'); document.getElementById('tabReg').classList.toggle('active',t!=='login'); document.getElementById('forgotBox').classList.add('hidden'); hideMsgs(); document.getElementById('authSubtitle').innerHTML=t==='login'?'Login your <span style="color:#8A6BB5">Krative</span> account':'Create your <span style="color:#8A6BB5">Krative</span> account'; }
+function togglePass(id){ const e=document.getElementById(id); const isPass=e.type==='password'; e.type=isPass?'text':'password'; e.nextElementSibling.innerHTML=isPass?'<i class="ri-eye-off-line"></i> Hide':'<i class="ri-eye-line"></i> Show'; }
+function hideMsgs(){ document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';m.innerText='';}); }
+function showErr(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
+function showOk(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
+async function doRegister(){ const name=rName.value.trim(),username=rUsername.value.trim().toLowerCase(),phone=rPhone.value.trim(),email=rEmail.value.trim().toLowerCase(),pass=rPass.value,confirm=rConfirm.value,agree=document.getElementById('agree').checked; hideMsgs(); if(!name||!username||!phone||!email||!pass){showErr('regErr','Fill all required fields');return;} if(pass.length<6){showErr('regErr','Password must be at least 6 characters');return;} if(pass!==confirm){showErr('regErr','Passwords do not match');return;} if(!agree){showErr('regErr','You must agree to Terms');toggleTerms();return;} const btn=document.getElementById('regBtn'); btn.innerHTML='<i class="ri-loader-4-line"></i> Creating...'; btn.disabled=true; try{ const {data:exists}=await supabaseClient.from('profiles').select('username').ilike('username',username).maybeSingle(); if(exists){showErr('regErr','Username already taken');btn.innerHTML='<i class="ri-user-add-line"></i> Create Account';btn.disabled=false;return;} const {data,error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name,username,phone}}}); if(error) throw error; localStorage.setItem('userEmail',email); localStorage.setItem('userName',name); localStorage.setItem('username',username); localStorage.setItem('logged','yes'); showOk('regOk','Account created! Redirecting...'); setTimeout(()=>location.href='dashboard.html',900);}catch(e){showErr('regErr',e.message); btn.innerHTML='<i class="ri-user-add-line"></i> Create Account'; btn.disabled=false;} }
+async function doLogin(){ const usernameInput=lUsername.value.trim().toLowerCase(),pass=lPass.value; hideMsgs(); if(!usernameInput||!pass){showErr('loginErr','Enter username & password');return;} const btn=loginBtn; btn.innerHTML='<i class="ri-loader-4-line"></i> Logging in...'; btn.disabled=true; try{ let emailToLogin=usernameInput; if(!usernameInput.includes('@')){ const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',usernameInput).maybeSingle(); if(!profile) throw new Error('Username not found'); emailToLogin=profile.email.toLowerCase(); } const {data,error}=await supabaseClient.auth.signInWithPassword({email:emailToLogin,password:pass}); if(error) throw error; localStorage.setItem('userEmail',data.user.email); localStorage.setItem('userName',data.user.user_metadata.full_name||''); localStorage.setItem('username',data.user.user_metadata.username||usernameInput); localStorage.setItem('logged','yes'); showOk('loginOk','Login successful!'); setTimeout(()=>location.href='dashboard.html',600);}catch(e){ showErr('loginErr',e.message); btn.innerHTML='<i class="ri-login-circle-line"></i> Login'; btn.disabled=false; } }
+function forgotPass(){ forgotBox.classList.remove('hidden'); fUsername.value=lUsername.value.trim(); }
+async function sendReset(){ const username=fUsername.value.trim().toLowerCase(); const msg=forgotMsg; if(!username){msg.innerText='Enter username';msg.style.display='block';msg.className='msg err';return;} const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',username).maybeSingle(); if(!profile){msg.innerText='Username not found';msg.style.display='block';msg.className='msg err';return;} msg.innerText='Account found: '+profile.email; msg.style.display='block'; msg.className='msg ok'; }
+</script>
+</body>
+</html>

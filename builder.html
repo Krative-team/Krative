@@ -98,7 +98,6 @@ label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-trans
 <div id="w3" class="wizard-page"><div class="wizard-card"><h2>Bio</h2><textarea id="wBio" rows="4" placeholder="I help startups..."></textarea><input id="wRole" placeholder="Available for freelance" style="margin-top:10px"/><div class="actions"><button class="btn-back" onclick="goWizard(2)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(4)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
 <div id="w4" class="wizard-page"><div class="wizard-card"><h2>Education</h2><div id="eduList"></div><input id="eduSchool" placeholder="School"/><input id="eduDegree" placeholder="Degree" style="margin-top:8px"/><input id="eduYear" placeholder="Year" style="margin-top:8px"/><button class="btn-ghost" onclick="addEdu()"><i class="ri-add-line"></i> Add Education</button><div class="actions"><button class="btn-back" onclick="goWizard(3)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(5)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
 <div id="w5" class="wizard-page"><div class="wizard-card"><h2>Work</h2><div id="workList"></div><input id="workCompany" placeholder="Company"/><input id="workRole" placeholder="Role" style="margin-top:8px"/><textarea id="workDesc" placeholder="Description..." style="margin-top:8px"></textarea><button class="btn-ghost" onclick="addWork()"><i class="ri-add-line"></i> Add Work</button><div class="actions"><button class="btn-back" onclick="goWizard(4)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(6)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
-
 <div id="w6" class="wizard-page"><div class="wizard-card"><h2>Projects</h2><div id="projList"></div>
 <input id="projTitle" placeholder="Title"/>
 <textarea id="projDesc" placeholder="Description..." style="margin-top:8px"></textarea>
@@ -117,7 +116,6 @@ label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-trans
 <input id="projLink" placeholder="Project Link (https://...)" style="margin-top:8px"/>
 <button class="btn-ghost" onclick="addProject()"><i class="ri-add-line"></i> Add Project</button>
 <div class="actions"><button class="btn-back" onclick="goWizard(5)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(7)">Preview <i class="ri-eye-line"></i></button></div></div></div>
-
 <div id="w7" class="wizard-page"><div class="wizard-card" style="background:transparent;border:none;padding:0"><h2 id="previewTitle" style="font-size:20px;margin-bottom:12px;display:flex;gap:8px;align-items:center"><i class="ri-eye-line"></i> Preview — Live Template</h2><div id="finalPreview"></div><div class="actions" style="margin-top:16px"><button class="btn-back" onclick="goWizard(6)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" id="pubBtn" onclick="publish()"><i class="ri-rocket-2-line"></i> Publish</button></div><div id="shareBox" style="margin-top:16px"></div><p id="publishError" style="display:none;color:#ff5555;margin-top:10px;font-size:13px;background:#1a0000;padding:10px;border-radius:8px"></p></div></div>
 </div></div>
 <script>
@@ -204,7 +202,6 @@ function addEdu(){ const s=eduSchool.value.trim(),d=eduDegree.value.trim(),y=edu
 function renderEdu(){ eduList.innerHTML=educations.map((e,i)=>`<div style="background:var(--card);border:1px solid var(--border);padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between">${e.school} - ${e.degree} (${e.year}) <button onclick="educations.splice(${i},1);renderEdu();renderFinal()" style="background:var(--border);color:var(--text);border:none;padding:4px 8px;border-radius:6px"><i class="ri-close-line"></i></button></div>`).join(''); }
 function addWork(){ const c=workCompany.value.trim(),r=workRole.value.trim(),d=workDesc.value.trim(); if(!c||!r||!d)return alert('Fill all'); works.push({company:c,role:r,desc:d}); workCompany.value=workRole.value=workDesc.value=''; renderWork(); renderFinal(); }
 function renderWork(){ workList.innerHTML=works.map((w,i)=>`<div style="background:var(--card);border:1px solid var(--border);padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between">${w.role} @ ${w.company} <button onclick="works.splice(${i},1);renderWork();renderFinal()" style="background:var(--border);color:var(--text);border:none;padding:4px 8px;border-radius:6px"><i class="ri-close-line"></i></button></div>`).join(''); }
-
 let tempProjImageUrl = '';
 document.getElementById('projImageFile')?.addEventListener('change', async function(e){
   const file = e.target.files[0]; if(!file) return;
@@ -233,7 +230,6 @@ document.getElementById('projImageFile')?.addEventListener('change', async funct
     status.style.color = '#ff5555';
   }
 });
-
 function addProject(){ 
   const t=projTitle.value.trim(); 
   if(!t) return alert('Title'); 
@@ -257,7 +253,6 @@ function renderProj(){
     <button onclick="projects.splice(${i},1);renderProj();renderFinal()" style="background:var(--border);color:var(--text);border:none;padding:4px 8px;border-radius:6px"><i class="ri-close-line"></i></button>
   </div>`).join(''); 
 }
-
 ['wName','wHeadline','wBio','wRole','wEmail','wPhone','wLocation','wSlug','wLinkedin','wGithub','wTwitter','wInsta','wFacebook','wTiktok','wTelegram','wWhatsapp'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', renderFinal); });
 function avatarHTML(d, size, radius, extra){
   if(d.photo) return `<img src="${d.photo}" style="width:${size};height:${size};border-radius:${radius};object-fit:cover;${extra||''}">`;
@@ -320,8 +315,8 @@ async function publish(){
     } else {
       const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Slug taken, choose another');
       const {error}=await supabaseClient.from('portfolios').insert({...payload, views:0}); if(error) throw error;
-      const link=location.origin+`/portfolio.html?user=${finalSlug}`;
-      shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #8A6BB5;border-radius:12px"><b><i class="ri-rocket-2-line"></i> Published!</b><div style="display:flex;gap:8px;background:var(--bg);padding:8px;border-radius:8px;margin-top:8px;border:1px solid var(--border)"><input value="${link}" readonly style="flex:1;background:transparent;border:none;color:#8A6BB5;font-size:11px"><button onclick="navigator.clipboard.writeText('${link}')" style="background:#8A6BB5;color:#fff;border:none;padding:6px 10px;border-radius:6px"><i class="ri-file-copy-line"></i> Copy</button></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Published';
+      const link = `${location.origin}${location.pathname.replace(/\/[^\/]*$/, '')}/portfolio.html?user=${finalSlug}`;
+      shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #8A6BB5;border-radius:12px"><b><i class="ri-rocket-2-line"></i> Published!</b><p style="font-size:11px;color:var(--sub);margin-top:6px">Your link:</p><div style="display:flex;gap:8px;background:var(--bg);padding:8px;border-radius:8px;margin-top:8px;border:1px solid var(--border)"><input value="${link}" readonly style="flex:1;background:transparent;border:none;color:#8A6BB5;font-size:11px"><button onclick="navigator.clipboard.writeText('${link}')" style="background:#8A6BB5;color:#fff;border:none;padding:6px 10px;border-radius:6px"><i class="ri-file-copy-line"></i> Copy</button></div><div style="margin-top:10px;display:flex;gap:8px"><a href="${link}" target="_blank" style="flex:1;text-align:center;background:var(--text);color:var(--bg);padding:10px;border-radius:100px;font-weight:700;font-size:12px"><i class="ri-external-link-line"></i> Open Portfolio</a></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Published';
     }
   }catch(e){ errBox.style.display='block'; errBox.innerHTML='<i class="ri-error-warning-line"></i> Error: '+e.message; shareBox.innerHTML=''; btn.innerHTML=isEditMode?'<i class="ri-edit-line"></i> Update Portfolio':'<i class="ri-rocket-2-line"></i> Publish'; btn.disabled=false; }
 }

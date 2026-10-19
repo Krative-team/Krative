@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Auth — Krative</title>
+<title>Official Login — Krative Portfolio Builder</title>
+<meta name="description" content="Official login and registration page for Krative Portfolio Builder. Krative is a portfolio builder for freelancers. Official site: krative-team.github.io/Krative/ Contact: etoabasis@gmail.com"/>
+<link rel="canonical" href="https://krative-team.github.io/Krative/auth.html">
+<meta property="og:title" content="Official Login — Krative"/>
+<meta property="og:description" content="Official login for Krative Portfolio Builder - krative-team.github.io/Krative/"/>
+<meta property="og:url" content="https://krative-team.github.io/Krative/auth.html"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
@@ -45,8 +50,8 @@ input:focus{border-color:#8A6BB5}
 <body>
 <button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button>
 <div class="auth-wrap">
-<div class="logo">Krative<span>.</span></div>
-<p id="authSubtitle" class="subtitle">Login your <span style="color:#8A6BB5">Krative</span> account</p>
+<a href="index.html" style="text-decoration:none"><div class="logo">Krative<span>.</span></div></a>
+<p id="authSubtitle" class="subtitle">Official login for <span style="color:#8A6BB5">Krative</span> • krative-team.github.io/Krative/</p>
 
 <div class="tabs">
 <button id="tabLogin" class="active" onclick="switchTab('login')"><i class="ri-login-box-line"></i> Login</button>
@@ -54,15 +59,15 @@ input:focus{border-color:#8A6BB5}
 </div>
 
 <div id="loginForm" class="card">
-<label>Username or Email</label>
-<input id="lUsername" placeholder="Username or Email"/>
-<label>Password</label>
+<label>Username or Email for Krative account</label>
+<input id="lUsername" placeholder="Username or Email for Krative"/>
+<label>Password for Krative</label>
 <div class="pass-wrap"><input id="lPass" type="password" placeholder="••••••••"/><span onclick="togglePass('lPass')"><i class="ri-eye-line"></i> Show</span></div>
 <div style="display:flex;justify-content:space-between;margin-top:14px;align-items:center">
 <label class="check" style="margin:0"><input type="checkbox" id="remember"/> Remember me</label>
 <span class="link" onclick="forgotPass()"><i class="ri-lock-line"></i> Forgot?</span>
 </div>
-<button class="btn btn-primary" id="loginBtn" onclick="doLogin()"><i class="ri-login-circle-line"></i> Login</button>
+<button class="btn btn-primary" id="loginBtn" onclick="doLogin()"><i class="ri-login-circle-line"></i> Login to Krative</button>
 <p style="text-align:center;margin-top:18px;font-size:12px;color:var(--sub)">No account? <span class="link" onclick="switchTab('register')">Create one</span></p>
 <div id="loginErr" class="msg err"></div><div id="loginOk" class="msg ok"></div>
 </div>
@@ -70,25 +75,25 @@ input:focus{border-color:#8A6BB5}
 <div id="regForm" class="card hidden">
 <div class="row"><div><label>Full Name *</label><input id="rName" placeholder="Samuel Adeyemi"/></div><div><label>Username *</label><input id="rUsername" placeholder="sam01"/></div></div>
 <label>Phone *</label><input id="rPhone" placeholder="+234 801 234 5678"/>
-<label>Email *</label><input id="rEmail" placeholder="samuel@gmail.com"/>
+<label>Email for Krative account *</label><input id="rEmail" placeholder="samuel@gmail.com"/>
 <div class="row"><div><label>Password *</label><div class="pass-wrap"><input id="rPass" type="password" placeholder="Min 6 chars"/><span onclick="togglePass('rPass')"><i class="ri-eye-line"></i> Show</span></div></div><div><label>Confirm *</label><div class="pass-wrap"><input id="rConfirm" type="password" placeholder="Confirm"/><span onclick="togglePass('rConfirm')"><i class="ri-eye-line"></i> Show</span></div></div></div>
 
 <div class="terms-wrap">
 <label class="terms-trigger"><input type="checkbox" id="agree"/> I agree to <b onclick="toggleTerms(event)"><i class="ri-file-list-line"></i> Terms & Privacy <i id="termsIcon" class="ri-arrow-down-s-line"></i></b></label>
 <div id="termsDropdown" class="terms-dropdown">
 <h4><i class="ri-shield-check-line"></i> 1. Acceptance</h4>
-<p>By creating a Krative account, you agree to our Terms and Privacy Policy. Krative is a portfolio builder for freelancers.</p>
+<p>By creating a Krative account on krative-team.github.io/Krative/, you agree to our Terms and Privacy Policy. Krative is a portfolio builder for freelancers.</p>
 <h4><i class="ri-user-settings-line"></i> 2. Your Account</h4>
 <ul><li>You must provide accurate info (name, email, username).</li><li>You are responsible for password security.</li><li>One account per person.</li></ul>
 <h4><i class="ri-copyright-line"></i> 3. Content</h4>
 <ul><li>You own your portfolio content.</li><li>Don't upload illegal, hateful, or stolen content.</li><li>We can remove portfolios that violate rules.</li></ul>
-<h4><i class="ri-lock-2-line"></i> 4. Privacy</h4>
-<ul><li>We store your email, name, username, portfolio data in Supabase.</li><li>We don't sell your data.</li><li>Public portfolios are visible via your slug link.</li></ul>
+<h4><i class="ri-lock-2-line"></i> 4. Privacy & Official Domain</h4>
+<ul><li>We store your email, name, username, portfolio data in Supabase.</li><li>We don't sell your data.</li><li>Official domain only: https://krative-team.github.io/Krative/</li><li>We never ask for bank details. Contact: etoabasis@gmail.com for deletion.</li></ul>
 <h4><i class="ri-delete-bin-line"></i> 5. Termination</h4>
 <p>We can suspend accounts that abuse, spam, or violate terms. You can delete your portfolio anytime from dashboard.</p>
 <h4><i class="ri-information-line"></i> 6. Disclaimer</h4>
 <p>Krative is free, provided as-is. We are not liable for job outcomes. Keep backups of your content.</p>
-<p style="margin-top:12px;font-size:10px;color:#8A6BB5"><i class="ri-calendar-line"></i> Last updated: May 2026 • Contact: etoabasis@gmail.com</p>
+<p style="margin-top:12px;font-size:10px;color:#8A6BB5"><i class="ri-calendar-line"></i> Last updated: May 2026 • Contact: etoabasis@gmail.com • Official: krative-team.github.io/Krative/</p>
 </div>
 </div>
 
@@ -104,6 +109,12 @@ input:focus{border-color:#8A6BB5}
 <div id="forgotMsg" class="msg ok" style="margin-top:12px"></div>
 <button class="btn btn-primary" onclick="sendReset()"><i class="ri-search-line"></i> Find Account</button>
 </div>
+
+<p style="text-align:center;margin-top:24px;font-size:11px;color:var(--sub);line-height:1.5">
+Official page for Krative Portfolio Builder<br>
+<a href="index.html" style="color:#8A6BB5;text-decoration:none">Home</a> • krative-team.github.io/Krative/ • etoabasis@gmail.com<br>
+We do not collect banking info.
+</p>
 </div>
 
 <script>
@@ -118,13 +129,13 @@ window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) a
 window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
 
 function toggleTerms(e){ if(e) e.preventDefault(); const dd=document.getElementById('termsDropdown'); const icon=document.getElementById('termsIcon'); dd.classList.toggle('show'); icon.className=dd.classList.contains('show')?'ri-arrow-up-s-line':'ri-arrow-down-s-line'; }
-function switchTab(t){ document.getElementById('loginForm').classList.toggle('hidden',t!=='login'); document.getElementById('regForm').classList.toggle('hidden',t==='login'); document.getElementById('tabLogin').classList.toggle('active',t==='login'); document.getElementById('tabReg').classList.toggle('active',t!=='login'); document.getElementById('forgotBox').classList.add('hidden'); hideMsgs(); document.getElementById('authSubtitle').innerHTML=t==='login'?'Login your <span style="color:#8A6BB5">Krative</span> account':'Create your <span style="color:#8A6BB5">Krative</span> account'; }
+function switchTab(t){ document.getElementById('loginForm').classList.toggle('hidden',t!=='login'); document.getElementById('regForm').classList.toggle('hidden',t==='login'); document.getElementById('tabLogin').classList.toggle('active',t==='login'); document.getElementById('tabReg').classList.toggle('active',t!=='login'); document.getElementById('forgotBox').classList.add('hidden'); hideMsgs(); document.getElementById('authSubtitle').innerHTML=t==='login'?'Official login for <span style="color:#8A6BB5">Krative</span> • krative-team.github.io/Krative/':'Create your official <span style="color:#8A6BB5">Krative</span> account'; }
 function togglePass(id){ const e=document.getElementById(id); const isPass=e.type==='password'; e.type=isPass?'text':'password'; e.nextElementSibling.innerHTML=isPass?'<i class="ri-eye-off-line"></i> Hide':'<i class="ri-eye-line"></i> Show'; }
 function hideMsgs(){ document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';m.innerText='';}); }
 function showErr(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
 function showOk(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
 async function doRegister(){ const name=rName.value.trim(),username=rUsername.value.trim().toLowerCase(),phone=rPhone.value.trim(),email=rEmail.value.trim().toLowerCase(),pass=rPass.value,confirm=rConfirm.value,agree=document.getElementById('agree').checked; hideMsgs(); if(!name||!username||!phone||!email||!pass){showErr('regErr','Fill all required fields');return;} if(pass.length<6){showErr('regErr','Password must be at least 6 characters');return;} if(pass!==confirm){showErr('regErr','Passwords do not match');return;} if(!agree){showErr('regErr','You must agree to Terms');toggleTerms();return;} const btn=document.getElementById('regBtn'); btn.innerHTML='<i class="ri-loader-4-line"></i> Creating...'; btn.disabled=true; try{ const {data:exists}=await supabaseClient.from('profiles').select('username').ilike('username',username).maybeSingle(); if(exists){showErr('regErr','Username already taken');btn.innerHTML='<i class="ri-user-add-line"></i> Create Account';btn.disabled=false;return;} const {data,error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name,username,phone}}}); if(error) throw error; localStorage.setItem('userEmail',email); localStorage.setItem('userName',name); localStorage.setItem('username',username); localStorage.setItem('logged','yes'); showOk('regOk','Account created! Redirecting...'); setTimeout(()=>location.href='dashboard.html',900);}catch(e){showErr('regErr',e.message); btn.innerHTML='<i class="ri-user-add-line"></i> Create Account'; btn.disabled=false;} }
-async function doLogin(){ const usernameInput=lUsername.value.trim().toLowerCase(),pass=lPass.value; hideMsgs(); if(!usernameInput||!pass){showErr('loginErr','Enter username & password');return;} const btn=loginBtn; btn.innerHTML='<i class="ri-loader-4-line"></i> Logging in...'; btn.disabled=true; try{ let emailToLogin=usernameInput; if(!usernameInput.includes('@')){ const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',usernameInput).maybeSingle(); if(!profile) throw new Error('Username not found'); emailToLogin=profile.email.toLowerCase(); } const {data,error}=await supabaseClient.auth.signInWithPassword({email:emailToLogin,password:pass}); if(error) throw error; localStorage.setItem('userEmail',data.user.email); localStorage.setItem('userName',data.user.user_metadata.full_name||''); localStorage.setItem('username',data.user.user_metadata.username||usernameInput); localStorage.setItem('logged','yes'); showOk('loginOk','Login successful!'); setTimeout(()=>location.href='dashboard.html',600);}catch(e){ showErr('loginErr',e.message); btn.innerHTML='<i class="ri-login-circle-line"></i> Login'; btn.disabled=false; } }
+async function doLogin(){ const usernameInput=lUsername.value.trim().toLowerCase(),pass=lPass.value; hideMsgs(); if(!usernameInput||!pass){showErr('loginErr','Enter username & password');return;} const btn=loginBtn; btn.innerHTML='<i class="ri-loader-4-line"></i> Logging in...'; btn.disabled=true; try{ let emailToLogin=usernameInput; if(!usernameInput.includes('@')){ const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',usernameInput).maybeSingle(); if(!profile) throw new Error('Username not found'); emailToLogin=profile.email.toLowerCase(); } const {data,error}=await supabaseClient.auth.signInWithPassword({email:emailToLogin,password:pass}); if(error) throw error; localStorage.setItem('userEmail',data.user.email); localStorage.setItem('userName',data.user.user_metadata.full_name||''); localStorage.setItem('username',data.user.user_metadata.username||usernameInput); localStorage.setItem('logged','yes'); showOk('loginOk','Login successful!'); setTimeout(()=>location.href='dashboard.html',600);}catch(e){ showErr('loginErr',e.message); btn.innerHTML='<i class="ri-login-circle-line"></i> Login to Krative'; btn.disabled=false; } }
 function forgotPass(){ forgotBox.classList.remove('hidden'); fUsername.value=lUsername.value.trim(); }
 async function sendReset(){ const username=fUsername.value.trim().toLowerCase(); const msg=forgotMsg; if(!username){msg.innerText='Enter username';msg.style.display='block';msg.className='msg err';return;} const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',username).maybeSingle(); if(!profile){msg.innerText='Username not found';msg.style.display='block';msg.className='msg err';return;} msg.innerText='Account found: '+profile.email; msg.style.display='block'; msg.className='msg ok'; }
 </script>

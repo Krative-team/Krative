@@ -46,7 +46,7 @@ input:focus{border-color:#8A6BB5}
 <body>
 <button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button>
 <div class="auth-wrap">
-<div class="logo">Krative<span>.</span></div>
+<a href="./index.html" style="text-decoration:none"><div class="logo">Krative<span>.</span></div></a>
 <p id="authSubtitle" class="subtitle">Login your <span style="color:#8A6BB5">Krative</span> account — This is NOT a Google login</p>
 
 <div class="tabs">
@@ -56,8 +56,8 @@ input:focus{border-color:#8A6BB5}
 
 <div id="loginForm" class="card">
 <p style="font-size:11px;color:var(--sub);margin-bottom:10px"><i class="ri-information-line"></i> This is your Krative portfolio account only. We never ask for your Gmail or Google password.</p>
-<label>Krative Username</label>
-<input id="lUsername" autocomplete="username" placeholder="Krative username"/>
+<label>Krative Username or Email</label>
+<input id="lUsername" autocomplete="username" placeholder="Krative username or email"/>
 <label>Krative Password</label>
 <div class="pass-wrap"><input id="lPass" type="password" autocomplete="current-password" placeholder="Your Krative password"/><span onclick="togglePass('lPass')"><i class="ri-eye-line"></i> Show</span></div>
 <div style="display:flex;justify-content:space-between;margin-top:14px;align-items:center">
@@ -73,13 +73,13 @@ input:focus{border-color:#8A6BB5}
 <p style="font-size:11px;color:var(--sub);margin-bottom:10px"><i class="ri-information-line"></i> Create a Krative-only account. Do not use your Google/Gmail password here.</p>
 <div class="row"><div><label>Full Name *</label><input id="rName" autocomplete="name" placeholder="Samuel Adeyemi"/></div><div><label>Krative Username *</label><input id="rUsername" autocomplete="username" placeholder="sam01"/></div></div>
 <label>Phone *</label><input id="rPhone" autocomplete="tel" placeholder="+234 801 234 5678"/>
-<label>Email for Krative *</label><input id="rEmail" autocomplete="email" placeholder="samuel@gmail.com"/>
-<div class="row"><div><label>Krative Password *</label><div class="pass-wrap"><input id="rPass" type="password" autocomplete="new-password" placeholder="Min 6 chars, Krative only"/><span onclick="togglePass('rPass')"><i class="ri-eye-line"></i> Show</span></div></div><div><label>Confirm *</label><div class="pass-wrap"><input id="rConfirm" type="password" autocomplete="new-password" placeholder="Confirm"/><span onclick="togglePass('rConfirm')"><i class="ri-eye-line"></i> Show</span></div></div></div>
+<label>Email for Krative *</label><input id="rEmail" type="email" autocomplete="email" placeholder="samuel@gmail.com"/>
+<div class="row"><div><label>Krative Password *</label><div class="pass-wrap"><input id="rPass" type="password" autocomplete="new-password" placeholder="Min 6 chars"/><span onclick="togglePass('rPass')"><i class="ri-eye-line"></i> Show</span></div></div><div><label>Confirm *</label><div class="pass-wrap"><input id="rConfirm" type="password" autocomplete="new-password" placeholder="Confirm"/><span onclick="togglePass('rConfirm')"><i class="ri-eye-line"></i> Show</span></div></div></div>
 
 <div class="terms-wrap">
 <label class="terms-trigger"><input type="checkbox" id="agree"/> I agree to <b onclick="toggleTerms(event)"><i class="ri-file-list-line"></i> Terms & Privacy <i id="termsIcon" class="ri-arrow-down-s-line"></i></b></label>
 <div id="termsDropdown" class="terms-dropdown">
-By creating a Krative account on krative-team.github.io/Krative/, you agree to Terms. This is not Google login. We store name/email in Supabase only.
+By creating a Krative account on krative-team.github.io/Krative/, you agree to Terms. This is not Google login. We store name/email in Supabase only. Contact etoabasis@gmail.com
 </div>
 </div>
 
@@ -105,16 +105,85 @@ const themeBtn=document.getElementById('themeBtn');
 function applyTheme(t){ if(t==='light'){document.body.classList.add('light');themeBtn.innerHTML='<i class="ri-sun-line"></i>';}else{document.body.classList.remove('light');themeBtn.innerHTML='<i class="ri-moon-line"></i>';} localStorage.setItem('krative_theme',t); }
 applyTheme(localStorage.getItem('krative_theme')||'dark');
 themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
-function toggleTerms(e){ if(e) e.preventDefault(); const dd=document.getElementById('termsDropdown'); dd.classList.toggle('show'); }
-function switchTab(t){ document.getElementById('loginForm').classList.toggle('hidden',t!=='login'); document.getElementById('regForm').classList.toggle('hidden',t==='login'); document.getElementById('tabLogin').classList.toggle('active',t==='login'); document.getElementById('tabReg').classList.toggle('active',t!=='login'); document.getElementById('forgotBox').classList.add('hidden'); hideMsgs(); }
+
+function toggleTerms(e){ if(e) e.preventDefault(); const dd=document.getElementById('termsDropdown'); const ic=document.getElementById('termsIcon'); dd.classList.toggle('show'); if(ic) ic.className=dd.classList.contains('show')?'ri-arrow-up-s-line':'ri-arrow-down-s-line'; }
+function switchTab(t){ document.getElementById('loginForm').classList.toggle('hidden',t!=='login'); document.getElementById('regForm').classList.toggle('hidden',t==='login'); document.getElementById('tabLogin').classList.toggle('active',t==='login'); document.getElementById('tabReg').classList.toggle('active',t!=='login'); document.getElementById('forgotBox').classList.add('hidden'); hideMsgs(); document.getElementById('authSubtitle').innerHTML=t==='login'?'Login your <span style="color:#8A6BB5">Krative</span> account — This is NOT a Google login':'Create your <span style="color:#8A6BB5">Krative</span> account'; }
 function togglePass(id){ const e=document.getElementById(id); const isPass=e.type==='password'; e.type=isPass?'text':'password'; e.nextElementSibling.innerHTML=isPass?'<i class="ri-eye-off-line"></i> Hide':'<i class="ri-eye-line"></i> Show'; }
-function hideMsgs(){ document.querySelectorAll('.msg').forEach(m=>{m.style.display='none';}); }
-function showErr(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
-function showOk(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; }
-async function doRegister(){ /* same logic as before */ const name=rName.value.trim(),username=rUsername.value.trim().toLowerCase(),phone=rPhone.value.trim(),email=rEmail.value.trim().toLowerCase(),pass=rPass.value,confirm=rConfirm.value; hideMsgs(); if(!name||!username||!phone||!email||!pass){showErr('regErr','Fill all');return;} if(pass!==confirm){showErr('regErr','Passwords no match');return;} try{ const {data,error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name,username,phone}}}); if(error) throw error; showOk('regOk','Account created! Redirecting...'); setTimeout(()=>location.href='dashboard.html',900);}catch(e){showErr('regErr',e.message);} }
-async function doLogin(){ const u=lUsername.value.trim().toLowerCase(),p=lPass.value; hideMsgs(); if(!u||!p){showErr('loginErr','Enter username & password');return;} try{ let email=u; if(!u.includes('@')){ const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',u).maybeSingle(); if(!profile) throw new Error('Username not found'); email=profile.email; } const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:p}); if(error) throw error; showOk('loginOk','Login ok'); setTimeout(()=>location.href='dashboard.html',600);}catch(e){showErr('loginErr',e.message);} }
-function forgotPass(){ forgotBox.classList.remove('hidden'); }
-async function sendReset(){ const username=fUsername.value.trim().toLowerCase(); const msg=forgotMsg; if(!username){msg.innerText='Enter username';msg.style.display='block';msg.className='msg err';return;} const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',username).maybeSingle(); if(!profile){msg.innerText='Not found';msg.style.display='block';msg.className='msg err';return;} msg.innerText='Found: '+profile.email; msg.style.display='block'; }
+function hideMsgs(){ document.querySelectorAll('.msg').forEach(m=>{m.style.display='none'; m.innerText='';}); }
+function showErr(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; el.className='msg err'; }
+function showOk(id,text){ const el=document.getElementById(id); el.innerText=text; el.style.display='block'; el.className='msg ok'; }
+
+async function doRegister(){
+ const name=document.getElementById('rName').value.trim();
+ const username=document.getElementById('rUsername').value.trim().toLowerCase();
+ const phone=document.getElementById('rPhone').value.trim();
+ const email=document.getElementById('rEmail').value.trim().toLowerCase();
+ const pass=document.getElementById('rPass').value;
+ const confirm=document.getElementById('rConfirm').value;
+ const agree=document.getElementById('agree').checked;
+ hideMsgs();
+ if(!name||!username||!phone||!email||!pass){showErr('regErr','Fill all required fields');return;}
+ if(pass.length<6){showErr('regErr','Password must be at least 6 chars');return;}
+ if(pass!==confirm){showErr('regErr','Passwords do not match');return;}
+ if(!agree){showErr('regErr','You must agree to Terms');toggleTerms();return;}
+ const btn=document.getElementById('regBtn'); btn.innerHTML='<i class="ri-loader-4-line"></i> Creating...'; btn.disabled=true;
+ try{
+  const {data:exists}=await supabaseClient.from('profiles').select('username').ilike('username',username).maybeSingle();
+  if(exists){showErr('regErr','Username already taken'); btn.innerHTML='<i class="ri-user-add-line"></i> Create Account'; btn.disabled=false; return;}
+  const {data,error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name,username:username,phone:phone}}});
+  if(error) throw error;
+  try{ await supabaseClient.from('profiles').insert([{username:username,email:email,full_name:name,phone:phone}]); }catch(_){}
+  localStorage.setItem('userEmail',email);
+  localStorage.setItem('userName',name);
+  localStorage.setItem('username',username);
+  localStorage.setItem('logged','yes');
+  showOk('regOk','Account created! Redirecting to dashboard...');
+  setTimeout(()=>{ window.location.href='./dashboard.html'; },900);
+ }catch(e){
+  showErr('regErr',e.message);
+  btn.innerHTML='<i class="ri-user-add-line"></i> Create Account'; btn.disabled=false;
+ }
+}
+
+async function doLogin(){
+ const u=document.getElementById('lUsername').value.trim().toLowerCase();
+ const p=document.getElementById('lPass').value;
+ hideMsgs();
+ if(!u||!p){showErr('loginErr','Enter username & password');return;}
+ const btn=document.getElementById('loginBtn');
+ btn.innerHTML='<i class="ri-loader-4-line"></i> Logging in...'; btn.disabled=true;
+ try{
+  let emailToUse=u;
+  if(!u.includes('@')){
+   const {data:profile, error:profErr}=await supabaseClient.from('profiles').select('email').ilike('username',u).maybeSingle();
+   if(profErr || !profile) throw new Error('Username not found. Try email.');
+   emailToUse=profile.email.toLowerCase();
+  }
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email:emailToUse,password:p});
+  if(error) throw error;
+  localStorage.setItem('userEmail',data.user.email);
+  localStorage.setItem('userName',data.user.user_metadata?.full_name||'');
+  localStorage.setItem('username',data.user.user_metadata?.username||u);
+  localStorage.setItem('logged','yes');
+  showOk('loginOk','Login successful! Redirecting...');
+  setTimeout(()=>{ window.location.href='./dashboard.html'; },700);
+ }catch(e){
+  showErr('loginErr',e.message);
+  btn.innerHTML='<i class="ri-login-circle-line"></i> Login to Krative';
+  btn.disabled=false;
+ }
+}
+
+function forgotPass(){ document.getElementById('forgotBox').classList.remove('hidden'); document.getElementById('fUsername').value=document.getElementById('lUsername').value.trim(); }
+async function sendReset(){
+ const username=document.getElementById('fUsername').value.trim().toLowerCase();
+ const msg=document.getElementById('forgotMsg');
+ if(!username){msg.innerText='Enter username';msg.style.display='block';msg.className='msg err';return;}
+ const {data:profile}=await supabaseClient.from('profiles').select('email').ilike('username',username).maybeSingle();
+ if(!profile){msg.innerText='Username not found';msg.style.display='block';msg.className='msg err';return;}
+ msg.innerText='Account found: '+profile.email+' — Use email to login, then reset from Supabase.';
+ msg.style.display='block'; msg.className='msg ok';
+}
 </script>
 </body>
 </html>

@@ -11,15 +11,16 @@ body.light{--bg:#ffffff;--card:#f5f5f5;--border:#e5e5e5;--text:#111;--sub:#666;-
 html,body{background:var(--bg)!important;color:var(--text)!important;transition:background 0.25s,color 0.25s}
 a{text-decoration:none!important}
 .navbar{background:var(--nav)!important;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:20px 0}
-.photo-wrap{position:relative;width:120px;height:120px;margin-bottom:20px}
-.photo-label{width:120px;height:120px;border:2px dashed #444;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:#111;position:relative}
-.photo-label img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;display:none}
-.photo-label.has-photo{border:solid 3px #8A6BB5}
+.photo-wrap{position:relative;width:128px;height:128px;margin:18px auto 20px;display:block}
+.photo-label{width:128px;height:128px;border:2px dashed #444;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:#111;position:relative;transition:0.25s}
+.photo-label img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;display:none;border-radius:50%}
+.photo-label.has-photo{border:solid 3px #8A6BB5;background:#000}
 .photo-label.has-photo img{display:block!important}
 .photo-label.has-photo span{display:none!important}
-.photo-label span{color:#777;font-size:13px;display:inline-flex;gap:4px;align-items:center}
-.camera-btn{position:absolute;bottom:2px;right:2px;width:32px;height:32px;border-radius:50%;background:#8A6BB5;border:2px solid var(--bg);display:grid;place-items:center;cursor:pointer;z-index:10}
-.camera-btn i{color:#fff}
+.photo-label span{color:#777;font-size:13px;display:inline-flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;text-align:center}
+.photo-label span i{font-size:22px}
+.camera-btn{position:absolute;bottom:0;right:0;width:36px;height:36px;border-radius:50%;background:#8A6BB5;border:3px solid var(--bg);display:grid;place-items:center;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.camera-btn i{color:#fff;font-size:16px}
 .social-row{display:flex;align-items:center;gap:8px;margin-top:14px}
 .social-row i{font-size:18px;color:var(--sub);flex-shrink:0;width:20px}
 .social-row input{flex:1}
@@ -86,9 +87,9 @@ label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-trans
 <option value="Folio Circle">Folio Circle — For photographers</option>
 </select>
 <div id="tplDesc" class="tpl-desc"><i class="ri-information-line"></i> <span id="tplDescText">Clean & centered.</span></div>
-<p style="font-size:11px;opacity:0.5;margin-top:8px"><i class="ri-price-tag-3-line"></i> Current: <b id="tplName" style="color:#8A6BB5"></b> <span id="tplSyncBadge" style="display:none;background:#8A6BB5;color:#fff;padding:2px 8px;border-radius:20px;font-size:10px;margin-left:6px">Auto-synced</span></p>
-<div class="photo-wrap" style="margin-top:16px"><label for="photoInput" class="photo-label" id="photoBox"><span><i class="ri-image-add-line"></i> Photo</span><img id="photoPrev"/></label><label for="photoInput" class="camera-btn"><i class="ri-camera-line"></i></label><input type="file" id="photoInput" accept="image/*" style="display:none"/></div>
-<p id="uploadStatus" style="font-size:11px;color:#8A6BB5;margin-top:-10px;margin-bottom:10px;display:none"></p>
+<p style="font-size:11px;opacity:0.7;margin-top:8px"><i class="ri-price-tag-3-line"></i> Current: <b id="tplName" style="color:#8A6BB5"></b> <span id="tplSyncBadge" style="display:none;background:#8A6BB5;color:#fff;padding:3px 10px;border-radius:20px;font-size:10px;margin-left:8px"><i class="ri-check-line"></i> Auto-synced from templates</span></p>
+<div class="photo-wrap"><label for="photoInput" class="photo-label" id="photoBox"><span><i class="ri-image-add-line"></i> Choose Photo</span><img id="photoPrev"/></label><label for="photoInput" class="camera-btn"><i class="ri-camera-line"></i></label><input type="file" id="photoInput" accept="image/*" style="display:none"/></div>
+<p id="uploadStatus" style="font-size:11px;color:#8A6BB5;margin-top:-10px;margin-bottom:10px;display:none;text-align:center"></p>
 <label>Full Name *</label><input id="wName" placeholder="e.g. Samuel Adeyemi"/>
 <label>Headline</label><input id="wHeadline" placeholder="Product Designer"/>
 <label>Email *</label><input id="wEmail" placeholder="alex@gmail.com"/>
@@ -176,15 +177,57 @@ themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark'
 let photoData=''; let uploadedPhotoUrl=''; let educations=[]; let works=[]; let projects=[]; let technicalSkills=[]; let softSkills=[];
 let editSlug = new URLSearchParams(location.search).get('edit'); let isEditMode=!!editSlug;
 if(!editSlug) localStorage.removeItem('editSlug');
-(function syncTemplate(){ const urlTpl=new URLSearchParams(location.search).get('template'); const storedTpl=localStorage.getItem('selectedTemplate')||localStorage.getItem('template'); if(urlTpl){localStorage.setItem('template',urlTpl);localStorage.setItem('selectedTemplate',urlTpl);} else if(storedTpl){localStorage.setItem('template',storedTpl);} })();
-const TPL_DESC={'Minimal Dark':'Clean & centered.','Kra-Pro Dark':'Sidebar layout.','Bold Editorial':'Big serif.','Grid Studio':'Bento grid.','Neo Brutal':'Grey industrial (not yellow).','Noir Studio':'Soft luxury.','Gradient Founder':'Gradient glow.','Swiss Grid':'Mono & structural.','Terminal':'Purple slate terminal (not green).','Color Pop':'Ice lavender pop (not yellow).','Magazine':'Mag layout.','Folio Circle':'Big circle focus.'};
-function getTpl(){ return document.getElementById('wTemplate').value || localStorage.getItem('template') || localStorage.getItem('selectedTemplate') || 'Minimal Dark'; }
-function changeTemplate(val){ localStorage.setItem('template',val); localStorage.setItem('selectedTemplate',val); document.getElementById('tplDescText').innerText=TPL_DESC[val]||''; document.getElementById('tplSyncBadge').style.display='inline-block'; setTimeout(()=>document.getElementById('tplSyncBadge').style.display='none',2000); renderFinal(); }
+
+// --- FIXED SYNC LOGIC ---
+(function syncTemplate(){
+  const urlParams = new URLSearchParams(location.search);
+  const urlTpl = urlParams.get('template');
+  const storedTpl = localStorage.getItem('selectedTemplate') || localStorage.getItem('template');
+  if(urlTpl){
+    localStorage.setItem('template', urlTpl);
+    localStorage.setItem('selectedTemplate', urlTpl);
+    console.log('Synced from URL:', urlTpl);
+  } else if(storedTpl){
+    localStorage.setItem('template', storedTpl);
+    console.log('Using stored template:', storedTpl);
+  }
+})();
+
+const TPL_DESC={'Minimal Dark':'Clean & centered.','Kra-Pro Dark':'Sidebar layout.','Bold Editorial':'Big serif.','Grid Studio':'Bento grid.','Neo Brutal':'Grey industrial.','Noir Studio':'Soft luxury.','Gradient Founder':'Gradient glow.','Swiss Grid':'Mono & structural.','Terminal':'Purple slate terminal.','Color Pop':'Ice lavender pop.','Magazine':'Mag layout.','Folio Circle':'Big circle focus.'};
+
+function getTpl(){ 
+  const dropdownVal = document.getElementById('wTemplate')?.value;
+  if(dropdownVal && dropdownVal !== '') return dropdownVal;
+  return localStorage.getItem('selectedTemplate') || localStorage.getItem('template') || 'Minimal Dark'; 
+}
+
+function changeTemplate(val){ 
+  if(!val) return;
+  localStorage.setItem('template',val); 
+  localStorage.setItem('selectedTemplate',val); 
+  const descEl = document.getElementById('tplDescText');
+  const badgeEl = document.getElementById('tplSyncBadge');
+  const nameEl = document.getElementById('tplName');
+  if(descEl) descEl.innerText=TPL_DESC[val]||''; 
+  if(nameEl) nameEl.innerText=val;
+  if(badgeEl){
+    badgeEl.style.display='inline-flex';
+    badgeEl.innerHTML='<i class="ri-check-line"></i> Synced: '+val;
+    setTimeout(()=>{ badgeEl.style.display='none'; },3000);
+  }
+  // Auto-sync preview immediately
+  renderFinal(); 
+}
+
 function getLiveData(){ return {name:wName.value||'Alex Doe',headline:wHeadline.value||'Product Designer',bio:wBio.value||'No bio yet',role:wRole.value||'',availability:document.getElementById('wAvailability')?.value||'Available for new projects',email:wEmail.value||'alex@mail.com',phone:wPhone.value||'',location:wLocation.value||'Lagos, Nigeria',photo:uploadedPhotoUrl||photoData||'',slug:document.getElementById('wSlug').value||'demo',template:getTpl(),views:128,linkedin:document.getElementById('wLinkedin')?.value||'',github:document.getElementById('wGithub')?.value||'',twitter:document.getElementById('wTwitter')?.value||'',insta:document.getElementById('wInsta')?.value||'',facebook:document.getElementById('wFacebook')?.value||'',tiktok:document.getElementById('wTiktok')?.value||'',telegram:document.getElementById('wTelegram')?.value||'',whatsapp:document.getElementById('wWhatsapp')?.value||'',works:works,educations:educations,projects:projects,technical_skills:technicalSkills,soft_skills:softSkills}; }
+
 function goWizard(n){ document.querySelectorAll('.wizard-page').forEach(p=>p.classList.remove('active')); document.getElementById('w'+n).classList.add('active'); document.querySelectorAll('.progress div').forEach((d,i)=> d.className = i < n ? 'done' : ''); window.scrollTo(0,0); if(n===8) renderFinal(); }
-document.getElementById('photoInput').addEventListener('change', async function(e){ const file=e.target.files[0]; if(!file) return; const img=document.getElementById('photoPrev'); const box=document.getElementById('photoBox'); const status=document.getElementById('uploadStatus'); const tempUrl=URL.createObjectURL(file); img.src=tempUrl; box.classList.add('has-photo'); img.style.display='block'; status.style.display='block'; status.innerHTML='<i class="ri-loader-4-line"></i> Uploading...'; try{ const fileName=`${Date.now()}-${file.name.replaceAll(' ','-')}`; const {error}=await supabaseClient.storage.from('portfolio-photos').upload(fileName,file); if(error) throw error; const {data}=supabaseClient.storage.from('portfolio-photos').getPublicUrl(fileName); uploadedPhotoUrl=data.publicUrl; photoData=uploadedPhotoUrl; img.src=photoData; status.innerHTML='<i class="ri-check-line"></i> Uploaded'; status.style.color='#22c55e'; }catch(err){ photoData=tempUrl; status.innerHTML='<i class="ri-error-warning-line"></i> Using local'; status.style.color='#f59e0b'; } renderFinal(); });
+
+document.getElementById('photoInput').addEventListener('change', async function(e){ const file=e.target.files[0]; if(!file) return; const img=document.getElementById('photoPrev'); const box=document.getElementById('photoBox'); const status=document.getElementById('uploadStatus'); const tempUrl=URL.createObjectURL(file); img.src=tempUrl; box.classList.add('has-photo'); img.style.display='block'; status.style.display='block'; status.innerHTML='<i class="ri-loader-4-line"></i> Uploading...'; try{ const fileName=`${Date.now()}-${file.name.replaceAll(' ','-')}`; const {error}=await supabaseClient.storage.from('portfolio-photos').upload(fileName,file); if(error) throw error; const {data}=supabaseClient.storage.from('portfolio-photos').getPublicUrl(fileName); uploadedPhotoUrl=data.publicUrl; photoData=uploadedPhotoUrl; img.src=photoData; status.innerHTML='<i class="ri-check-line"></i> Uploaded ✓'; status.style.color='#22c55e'; }catch(err){ photoData=tempUrl; status.innerHTML='<i class="ri-error-warning-line"></i> Using local preview'; status.style.color='#f59e0b'; } renderFinal(); });
+
 async function checkSlug(){ const slug=document.getElementById('wSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,''); const status=document.getElementById('slugStatus'); if(!slug){status.innerHTML='<i class="ri-error-warning-line"></i> Enter username';status.style.color='#ff4d4d';return;} status.innerHTML='<i class="ri-loader-4-line"></i> Checking...'; const {data}=await supabaseClient.from('portfolios').select('slug').eq('slug',slug).maybeSingle(); if(data&&data.slug!==editSlug){status.innerHTML='<i class="ri-close-circle-line"></i> Taken: '+slug;status.style.color='#ff4d4d';} else {status.innerHTML='<i class="ri-check-line"></i> Available: krative.site/'+slug;status.style.color='#22c55e';document.getElementById('wSlug').value=slug;} }
-function getLevelColor(l){ if(l<50) return '#ff5a5a'; if(l<75) return '#ffb84d'; return '#8A6BB5'; }
+
+function getLevelColor(l){ if(l<50) return '#9ca3af'; if(l<75) return '#6b7280'; return '#8A6BB5'; }
 function addTechSkill(){ const name=document.getElementById('techName').value.trim(); const level=parseInt(document.getElementById('techLevel').value); if(!name) return alert('Enter skill name'); if(technicalSkills.find(s=>s.name.toLowerCase()===name.toLowerCase())) return alert('Already added'); technicalSkills.push({name,level}); document.getElementById('techName').value=''; renderTech(); renderFinal(); }
 function renderTech(){ const list=document.getElementById('techList'); const chart=document.getElementById('techChart'); const bars=document.getElementById('techChartBars'); if(technicalSkills.length===0){list.innerHTML='<p style="font-size:11px;color:var(--sub)">No technical skills yet</p>';chart.style.display='none';return;} list.innerHTML=technicalSkills.map((s,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg);border:1px solid var(--border);padding:8px 12px;border-radius:10px;margin-bottom:6px"><span style="font-size:12px"><b>${s.name}</b> — ${s.level}%</span><button onclick="technicalSkills.splice(${i},1);renderTech();renderFinal()" style="background:var(--border);border:none;color:var(--text);padding:4px 8px;border-radius:6px"><i class="ri-close-line"></i></button></div>`).join(''); chart.style.display='block'; bars.innerHTML=technicalSkills.map(s=>`<div class="skill-bar"><div class="skill-bar-head"><span>${s.name}</span><span style="color:${getLevelColor(s.level)}">${s.level}%</span></div><div class="skill-track"><div class="skill-fill" style="width:${s.level}%;background:${getLevelColor(s.level)}"></div></div></div>`).join(''); }
 function addSoftSkill(){ const input=document.getElementById('softInput'); const val=input.value.trim(); if(!val) return; if(softSkills.includes(val)) return alert('Already added'); softSkills.push(val); input.value=''; renderSoft(); renderFinal(); }
@@ -199,22 +242,22 @@ function renderProj(){ projList.innerHTML=projects.map((p,i)=>`<div style="backg
 ['wName','wHeadline','wBio','wRole','wEmail','wPhone','wLocation','wSlug','wLinkedin','wGithub','wTwitter','wInsta','wFacebook','wTiktok','wTelegram','wWhatsapp','wAvailability'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', renderFinal); });
 document.getElementById('wAvailability')?.addEventListener('change', renderFinal);
 
-// PREVIEW ENGINE — FULL INTERACTIVE
+// PREVIEW ENGINE
 let previewCurrentPage='home';
 function previewGoPage(p){
   previewCurrentPage=p;
-  document.getElementById('previewPageLabel').innerText=p;
+  const label = document.getElementById('previewPageLabel');
+  if(label) label.innerText=p;
   document.querySelectorAll('#finalPreview [data-page]').forEach(el=>{ if(el.tagName==='FOOTER') return; el.style.display=el.getAttribute('data-page')===previewCurrentPage?'block':'none'; });
   document.querySelectorAll('#finalPreview .nav-link').forEach(a=>{ a.classList.remove('active'); if(a.getAttribute('data-nav')===p) a.classList.add('active'); });
 }
-function avatarHTMLPreview(d,size,radius,extra){ if(d.photo) return `<img src="${d.photo}" style="width:${size};height:${size};border-radius:${radius};object-fit:cover;${extra||''}">`; return `<div style="width:${size};height:${size};border-radius:${radius};display:grid;place-items:center;font-weight:800;background:#222;color:#fff;${extra||''}">${(d.name||'A')[0].toUpperCase()}</div>`; }
 function techChartHTMLPreview(d, type){
   const tech=d.technical_skills||[]; if(!tech.length) return '<p style="font-size:11px;color:var(--sub)">No technical skills</p>';
   if(type==='vertical'){ return `<div style="display:flex;align-items:end;gap:8px;height:120px;margin-top:10px">${tech.map(t=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:${t.level}%;min-height:10px;background:${getLevelColor(t.level)};border-radius:6px 6px 0 0;display:grid;place-items:start center;color:#fff;font-size:9px;font-weight:700;padding-top:2px">${t.level}%</div><span style="font-size:8px;color:var(--sub)">${t.name}</span></div>`).join('')}</div>`; }
   if(type==='pie'){ const total=tech.reduce((a,b)=>a+b.level,0)||1; let acc=0; const stops=tech.map(t=>{ const col=getLevelColor(t.level); const s=(acc/total)*100; acc+=t.level; const e=(acc/total)*100; return `${col} ${s}% ${e}%`; }).join(', '); const legend=tech.map(t=>`<div style="display:flex;align-items:center;gap:6px;font-size:10px"><span style="width:8px;height:8px;border-radius:50%;background:${getLevelColor(t.level)}"></span>${t.name} ${t.level}%</div>`).join(''); return `<div style="text-align:center"><div style="width:120px;height:120px;border-radius:50%;margin:0 auto;background:conic-gradient(${stops})"></div><div style="margin-top:10px;display:grid;gap:4px">${legend}</div></div>`; }
   return tech.map(t=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:10px"><span>${t.name}</span><span style="color:${getLevelColor(t.level)}">${t.level}%</span></div><div style="height:6px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:2px"><div style="height:100%;background:${getLevelColor(t.level)};width:${t.level}%"></div></div></div>`).join('');
 }
-function socialsPreview(d, align='left'){ const items=[]; if(d.github) items.push('<i class="ri-github-line"></i>'); if(d.linkedin) items.push('<i class="ri-linkedin-line"></i>'); if(d.twitter) items.push('<i class="ri-twitter-x-line"></i>'); if(d.insta) items.push('<i class="ri-instagram-line"></i>'); if(d.facebook) items.push('<i class="ri-facebook-line"></i>'); if(items.length===0) return '<span style="font-size:10px;color:var(--sub)">No socials</span>'; return `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;justify-content:${align==='center'?'center':'flex-start'}">${items.map(i=>`<span style="width:28px;height:28px;border-radius:100px;border:1px solid var(--border);display:grid;place-items:center;font-size:14px">${i}</span>`).join('')}</div>`; }
+function socialsPreview(d, align='left'){ const items=[]; if(d.github) items.push('<i class="ri-github-line"></i>'); if(d.linkedin) items.push('<i class="ri-linkedin-line"></i>'); if(d.twitter) items.push('<i class="ri-twitter-x-line"></i>'); if(d.insta) items.push('<i class="ri-instagram-line"></i>'); if(d.facebook) items.push('<i class="ri-facebook-line"></i>'); if(items.length===0) return ''; return `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;justify-content:${align==='center'?'center':'flex-start'}">${items.map(i=>`<span style="width:28px;height:28px;border-radius:100px;border:1px solid var(--border);display:grid;place-items:center;font-size:14px">${i}</span>`).join('')}</div>`; }
 
 function getFullTemplate(tplName, d){
   const key=tplName.toLowerCase();
@@ -223,28 +266,30 @@ function getFullTemplate(tplName, d){
   const avail = `<div style="margin-top:6px;font-size:10px;display:inline-flex;gap:4px;align-items:center;padding:4px 8px;border-radius:20px;border:1px solid var(--border);background:var(--card)"><span style="width:6px;height:6px;border-radius:50%;background:${d.availability.toLowerCase().includes('not')?'#ef4444':'#22c55e'}"></span>${d.availability}</div>`;
   const soft = d.soft_skills.length?`<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px">${d.soft_skills.map(s=>`<span style="font-size:9px;padding:4px 8px;border:1px solid var(--border);border-radius:20px">${s}</span>`).join('')}</div>`:'';
   let chartType='horizontal'; if(key.includes('kra-pro')||key.includes('neo')||key.includes('swiss')) chartType='vertical'; if(key.includes('bold')||key.includes('gradient')||key.includes('color')||key.includes('folio')) chartType='pie';
-  const chart = `<div style="margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px"><h4 style="font-size:10px;color:var(--sub);margin-bottom:8px"><i class="ri-bar-chart-line"></i> Technical — ${chartType}</h4>${techChartHTMLPreview(d,chartType)}${soft}</div>`;
+  const chart = `<div style="margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px"><h4 style="font-size:10px;color:var(--sub);margin-bottom:8px">Technical Skills — ${chartType}</h4>${techChartHTMLPreview(d,chartType)}${soft}</div>`;
   const projs = (d.projects||[]).map(p=>`<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card)"><div style="height:60px;background:linear-gradient(135deg,#8A6BB522,#ff7a7a22);display:grid;place-items:center"><i class="ri-image-line"></i></div><div style="padding:6px"><b style="font-size:10px">${p.title}</b></div></div>`).join('') || '<p style="font-size:10px;color:var(--sub)">No projects</p>';
   const edu = (d.educations||[]).map(e=>`<div style="border:1px solid var(--border);border-radius:10px;padding:8px;background:var(--card);font-size:10px;margin-bottom:6px"><b>${e.school}</b><br>${e.degree} • ${e.year}</div>`).join('') || '<p style="font-size:10px;color:var(--sub)">No edu</p>';
   const work = (d.works||[]).map(w=>`<div style="border:1px solid var(--border);border-radius:10px;padding:8px;background:var(--card);font-size:10px;margin-bottom:6px"><b>${w.company}</b> — ${w.role}<br>${w.desc}</div>`).join('') || '<p style="font-size:10px;color:var(--sub)">No work</p>';
-
   const navLinks = ['home','projects','education','contact'].map(p=>`<a class="nav-link ${p==='home'?'active':''}" data-nav="${p}" onclick="previewGoPage('${p}')" style="cursor:pointer;padding:6px 12px;border-radius:100px;border:1px solid var(--border);font-size:10px">${p}</a>`).join('');
-  
-  if(key.includes('minimal')) return {css:`:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A} .nav{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--nav)} .nav a.active{background:var(--text);color:var(--bg)} .content{padding:14px}`, html:`<div class="nav"><b>Krative.</b><div style="display:flex;gap:4px">${navLinks}</div></div><div class="content"><div data-page="home"><div style="display:flex;gap:10px"><div style="width:48px;height:48px;border-radius:12px;background:#222;display:grid;place-items:center">${d.name[0]}</div><div><b>${d.name}</b><p style="font-size:10px;color:var(--sub)">${d.headline}</p>${avail}<p style="font-size:10px;color:var(--sub);margin-top:6px">${d.bio}</p>${social}</div></div>${skillsBtn}${chart}</div><div data-page="projects" style="display:none"><h4>Projects</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">${projs}</div></div><div data-page="education" style="display:none"><h4>Education</h4>${edu}<h4 style="margin-top:10px">Work</h4>${work}</div><div data-page="contact" style="display:none"><h4>Contact ${d.name.split(' ')[0]}</h4><p style="font-size:10px;color:var(--sub)">${d.email} • ${d.phone}</p><p style="font-size:10px">${avail}</p><div style="margin-top:8px;display:grid;gap:6px"><input placeholder="Your Name" style="padding:8px;font-size:10px"/><input placeholder="Email" style="padding:8px;font-size:10px"/><textarea placeholder="Message" style="padding:8px;font-size:10px"></textarea><button style="background:#8A6BB5;color:#fff;border:none;padding:8px;border-radius:20px;font-size:10px">Send</button></div></div></div>`};
-
-  return {css:`:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A} body{background:var(--bg)!important;color:var(--text)!important} .nav{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--nav)} .nav a{padding:4px 10px;border-radius:20px;border:1px solid var(--border);font-size:10px} .nav a.active{background:var(--text);color:var(--bg)} .content{padding:14px}`, html:`<div class="nav"><span style="font-weight:700;font-size:11px">${tplName.toUpperCase()}</span><div style="display:flex;gap:4px">${navLinks}</div></div><div class="content"><div data-page="home"><div style="display:flex;gap:10px;align-items:center"><div style="width:60px;height:60px;border-radius:16px;overflow:hidden;background:#222">${d.photo?`<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover">`:`<div style="display:grid;place-items:center;height:100%">${d.name[0]}</div>`}</div><div><b>${d.name}</b><p style="font-size:10px;color:var(--sub)">${d.headline}</p>${avail}<br>${social}</div></div><p style="font-size:10px;color:var(--sub);margin-top:8px">${d.bio}</p>${skillsBtn}${chart}</div><div data-page="projects" style="display:none"><h4>Projects</h4><div style="display:grid;gap:6px;margin-top:8px">${projs}</div></div><div data-page="education" style="display:none"><h4>Journey — ${d.availability}</h4>${edu}<div style="margin-top:10px">${work}</div></div><div data-page="contact" style="display:none"><h4>Contact</h4><p style="font-size:10px;color:var(--sub)">${d.email} • ${d.phone}</p><p style="font-size:10px">${avail}</p><div style="margin-top:8px;display:grid;gap:6px"><input placeholder="Name"/><input placeholder="Contact"/><textarea placeholder="Message"></textarea><button style="background:#8A6BB5;color:#fff;border:none;padding:8px;border-radius:20px">Send</button></div></div></div>`};
+  return {css:`:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777;--nav:#0A0A0A} .nav{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--nav)} .nav a.active{background:var(--text);color:var(--bg)} .content{padding:14px}`, html:`<div class="nav"><b>Krative.</b><div style="display:flex;gap:4px">${navLinks}</div></div><div class="content"><div data-page="home"><div style="display:flex;gap:10px"><div style="width:48px;height:48px;border-radius:12px;background:#222;display:grid;place-items:center">${d.name[0]}</div><div><b>${d.name}</b><p style="font-size:10px;color:var(--sub)">${d.headline}</p>${avail}<p style="font-size:10px;color:var(--sub);margin-top:6px">${d.bio}</p>${social}</div></div>${skillsBtn}${chart}</div><div data-page="projects" style="display:none"><h4>Projects</h4><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">${projs}</div></div><div data-page="education" style="display:none"><h4>Education</h4>${edu}<h4 style="margin-top:10px">Work</h4>${work}</div><div data-page="contact" style="display:none"><h4>Contact ${d.name.split(' ')[0]}</h4><p style="font-size:10px;color:var(--sub)">${d.email} • ${d.phone}</p><p style="font-size:10px">${avail}</p><div style="margin-top:8px;display:grid;gap:6px"><input placeholder="Your Name" style="padding:8px;font-size:10px"/><input placeholder="Email" style="padding:8px;font-size:10px"/><textarea placeholder="Message" style="padding:8px;font-size:10px"></textarea><button style="background:#8A6BB5;color:#fff;border:none;padding:8px;border-radius:20px;font-size:10px">Send</button></div></div></div>`};
 }
 
 function renderFinal(){
   const tpl=getTpl();
-  document.getElementById('tplName').innerText=tpl;
-  document.getElementById('tplDescText').innerText=TPL_DESC[tpl]||'';
-  document.getElementById('wTemplate').value=tpl;
-  document.getElementById('previewTitle').innerHTML=`<i class="ri-eye-line"></i> Preview — ${tpl} (Live & Clickable)`;
+  const tplNameEl = document.getElementById('tplName');
+  const tplDescEl = document.getElementById('tplDescText');
+  const tplSelect = document.getElementById('wTemplate');
+  const previewTitle = document.getElementById('previewTitle');
+  if(tplNameEl) tplNameEl.innerText=tpl;
+  if(tplDescEl) tplDescEl.innerText=TPL_DESC[tpl]||'';
+  if(tplSelect && tplSelect.value !== tpl) tplSelect.value=tpl;
+  if(previewTitle) previewTitle.innerHTML=`<i class="ri-eye-line"></i> Preview — ${tpl} (Live & Clickable)`;
   const d=getLiveData();
   const t=getFullTemplate(tpl,d);
-  document.getElementById('previewCSS').innerHTML=t.css + ` body{font-family:Inter,sans-serif} .nav a{cursor:pointer} input,textarea{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px}`;
-  document.getElementById('finalPreview').innerHTML=t.html;
+  const cssEl = document.getElementById('previewCSS');
+  const finalEl = document.getElementById('finalPreview');
+  if(cssEl) cssEl.innerHTML=t.css + ` body{font-family:Inter,sans-serif} .nav a{cursor:pointer} input,textarea{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px}`;
+  if(finalEl) finalEl.innerHTML=t.html;
   previewCurrentPage='home';
   previewGoPage('home');
 }
@@ -266,6 +311,7 @@ async function loadForEdit(){
     renderEdu(); renderWork(); renderProj(); renderTech(); renderSoft(); renderFinal();
   }catch(e){ document.getElementById('publishError').style.display='block'; document.getElementById('publishError').innerHTML='<i class="ri-error-warning-line"></i> Could not load edit: '+e.message; }
 }
+
 async function publish(){
   const errBox=document.getElementById('publishError'); const shareBox=document.getElementById('shareBox'); const btn=document.getElementById('pubBtn'); errBox.style.display='none';
   const pendingEduSchool=eduSchool.value.trim(), pendingEduDegree=eduDegree.value.trim(), pendingEduYear=eduYear.value.trim(); if(pendingEduSchool&&pendingEduDegree&&pendingEduYear){educations.push({school:pendingEduSchool,degree:pendingEduDegree,year:pendingEduYear}); eduSchool.value=eduDegree.value=eduYear.value=''; renderEdu();}
@@ -275,37 +321,26 @@ async function publish(){
   btn.innerHTML=isEditMode?'<i class="ri-loader-4-line"></i> Updating...':'<i class="ri-loader-4-line"></i> Publishing...'; btn.disabled=true; shareBox.innerHTML='<div style="padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px"><i class="ri-loader-4-line"></i> '+(isEditMode?'Updating...':'Publishing...')+'</div>';
   try{
     let finalSlug=document.getElementById('wSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
-    const payload={
-      slug:finalSlug,
-      name:wName.value,
-      headline:wHeadline.value,
-      bio:wBio.value,
-      role:wRole.value,
-      availability:document.getElementById('wAvailability').value,
-      email:wEmail.value,
-      phone:wPhone.value||null,
-      location:wLocation.value||null,
-      linkedin:document.getElementById('wLinkedin')?.value||null,
-      github:document.getElementById('wGithub')?.value||null,
-      twitter:document.getElementById('wTwitter')?.value||null,
-      insta:document.getElementById('wInsta')?.value||null,
-      facebook:document.getElementById('wFacebook')?.value||null,
-      tiktok:document.getElementById('wTiktok')?.value||null,
-      telegram:document.getElementById('wTelegram')?.value||null,
-      whatsapp:document.getElementById('wWhatsapp')?.value||null,
-      photo:uploadedPhotoUrl||photoData||null,
-      educations:educations,
-      works:works,
-      projects:projects,
-      technical_skills:technicalSkills,
-      soft_skills:softSkills,
-      template:getTpl(),
-      owner_email:localStorage.getItem('userEmail')||wEmail.value
-    };
+    const payload={slug:finalSlug,name:wName.value,headline:wHeadline.value,bio:wBio.value,role:wRole.value,availability:document.getElementById('wAvailability').value,email:wEmail.value,phone:wPhone.value||null,location:wLocation.value||null,linkedin:document.getElementById('wLinkedin')?.value||null,github:document.getElementById('wGithub')?.value||null,twitter:document.getElementById('wTwitter')?.value||null,insta:document.getElementById('wInsta')?.value||null,facebook:document.getElementById('wFacebook')?.value||null,tiktok:document.getElementById('wTiktok')?.value||null,telegram:document.getElementById('wTelegram')?.value||null,whatsapp:document.getElementById('wWhatsapp')?.value||null,photo:uploadedPhotoUrl||photoData||null,educations:educations,works:works,projects:projects,technical_skills:technicalSkills,soft_skills:softSkills,template:getTpl(),owner_email:localStorage.getItem('userEmail')||wEmail.value};
     if(isEditMode){ if(finalSlug!==editSlug){ const {data:exists}=await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Username taken: '+finalSlug); } const {error}=await supabaseClient.from('portfolios').update(payload).eq('slug',editSlug); if(error) throw error; shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #22c55e;border-radius:12px"><b><i class="ri-check-line"></i> Updated!</b><p style="font-size:12px;color:var(--sub);margin-top:6px">Username: ${finalSlug} | Template: ${payload.template} | ${payload.availability}</p><div style="margin-top:12px"><button onclick="location.href='dashboard.html'" style="width:100%;padding:12px;border-radius:100px;background:var(--text);color:var(--bg);font-weight:700;border:none;cursor:pointer"><i class="ri-dashboard-line"></i> Go to Dashboard</button></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Updated'; localStorage.removeItem('editSlug'); }
     else { const {data:exists}=await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Username taken'); const {error}=await supabaseClient.from('portfolios').insert({...payload,views:0}); if(error) throw error; const link=`${location.origin}${location.pathname.replace(/\/[^\/]*$/,'')}/portfolio.html?user=${finalSlug}`; shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #8A6BB5;border-radius:12px"><b><i class="ri-rocket-2-line"></i> Published!</b><div style="display:flex;gap:8px;background:var(--bg);padding:8px;border-radius:8px;margin-top:8px;border:1px solid var(--border)"><input value="${link}" readonly style="flex:1;background:transparent;border:none;color:#8A6BB5;font-size:11px"><button onclick="navigator.clipboard.writeText('${link}')" style="background:#8A6BB5;color:#fff;border:none;padding:6px 10px;border-radius:6px"><i class="ri-file-copy-line"></i> Copy</button></div><a href="${link}" target="_blank" style="display:block;text-align:center;background:var(--text);color:var(--bg);padding:10px;border-radius:100px;font-weight:700;font-size:12px;margin-top:10px"><i class="ri-external-link-line"></i> Open Portfolio</a></div>`; btn.innerHTML='<i class="ri-check-line"></i> Published'; }
   }catch(e){ errBox.style.display='block'; errBox.innerHTML='<i class="ri-error-warning-line"></i> Error: '+e.message; shareBox.innerHTML=''; btn.innerHTML=isEditMode?'<i class="ri-edit-line"></i> Update Portfolio':'<i class="ri-rocket-2-line"></i> Publish'; btn.disabled=false; }
 }
-loadForEdit(); document.getElementById('wTemplate').value=getTpl(); changeTemplate(getTpl()); renderFinal();
+
+// --- INIT ---
+loadForEdit();
+if(!isEditMode){
+  // Ensure template from URL/storage is applied on first load
+  const initialTpl = getTpl();
+  const selEl = document.getElementById('wTemplate');
+  if(selEl) selEl.value = initialTpl;
+  const badge = document.getElementById('tplSyncBadge');
+  if(badge && (new URLSearchParams(location.search).get('template') || localStorage.getItem('selectedTemplate'))){
+    badge.style.display='inline-flex';
+    badge.innerHTML='<i class="ri-check-line"></i> Synced: '+initialTpl;
+    setTimeout(()=> badge.style.display='none', 4000);
+  }
+}
+renderFinal();
 </script>
 </body></html>

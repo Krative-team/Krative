@@ -21,7 +21,7 @@ a{text-decoration:none!important}
 .camera-btn{position:absolute;bottom:2px;right:2px;width:32px;height:32px;border-radius:50%;background:#8A6BB5;border:2px solid var(--bg);display:grid;place-items:center;cursor:pointer;z-index:10}
 .camera-btn i{color:#fff}
 .social-row{display:flex;align-items:center;gap:8px;margin-top:14px}
-.social-row i{font-size:18px;color:#8A6BB5;flex-shrink:0;width:20px}
+.social-row i{font-size:18px;color:var(--sub);flex-shrink:0;width:20px} /* SAME COLOR FIX */
 .social-row input{flex:1}
 #finalPreview{margin-top:16px;min-height:480px;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--bg)}
 .wizard-page{display:none}.wizard-page.active{display:block}
@@ -37,7 +37,11 @@ input,textarea,select{width:100%;background:var(--bg);border:1px solid var(--bor
 label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-transform:uppercase}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 .theme-btn{width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:0.25s}
-.slug-row{display:flex;gap:8px;align-items:center;margin-top:4px}.slug-row input{flex:1}
+/* SLUG FIELD BIGGER FIX */
+.slug-row{display:flex;gap:8px;align-items:flex-end;margin-top:6px}
+.slug-row input{flex:1;font-size:16px;padding:14px 16px;font-weight:600;letter-spacing:-.2px}
+.slug-prefix{font-size:11px;color:var(--sub);background:var(--bg);border:1px solid var(--border);padding:14px 12px;border-radius:12px;white-space:nowrap}
+.btn-check-small{background:var(--card);border:1px solid var(--border);color:var(--sub);padding:6px 12px;border-radius:100px;font-size:11px;cursor:pointer;height:36px;display:inline-flex;align-items:center;gap:4px} /* SMALLER CHECK */
 .tpl-desc{font-size:11px;color:var(--sub);margin-top:8px;background:var(--bg);border:1px solid var(--border);padding:10px 12px;border-radius:12px;line-height:1.5;display:flex;gap:6px;align-items:flex-start;transition:0.25s}
 .tpl-desc i{color:#8A6BB5;flex-shrink:0;margin-top:1px}
 </style>
@@ -59,20 +63,20 @@ label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-trans
 <div id="w1" class="wizard-page active"><div class="wizard-card"><h2>Personal</h2>
 <select id="wTemplate" onchange="changeTemplate(this.value)">
 <option value="Minimal Dark">Minimal Dark — For devs, designers, clean simple</option>
-<option value="Kra-Pro Dark">Kra-Pro Dark — For senior devs, product designers, consultants</option>
-<option value="Bold Editorial">Bold Editorial — For writers, bloggers, content strategists</option>
-<option value="Grid Studio">Grid Studio — For UI designers, photographers, portfolio heavy</option>
-<option value="Neo Brutal">Formal Executive — For freelance PMs, corporate freelancers</option>
-<option value="Noir Studio">Noir Studio — For brand designers, aesthetic freelancers</option>
-<option value="Gradient Founder">Gradient Founder — For indie hackers, no-code builders</option>
-<option value="Swiss Grid">Swiss Grid — For architects, UX researchers, minimal devs</option>
-<option value="Terminal">Formal Ledger — For freelance writers, editors, job seekers</option>
-<option value="Color Pop">Color Pop — For illustrators, animators, TikTok creators</option>
-<option value="Magazine">Magazine — For journalists, bloggers, case-study designers</option>
-<option value="Folio Circle">Folio Circle — For photographers, makeup artists, visual freelancers</option>
+<option value="Kra-Pro Dark">Kra-Pro Dark — For senior devs, product designers</option>
+<option value="Bold Editorial">Bold Editorial — For writers, bloggers</option>
+<option value="Grid Studio">Grid Studio — For UI designers, photographers</option>
+<option value="Neo Brutal">Formal Executive — For freelance PMs</option>
+<option value="Noir Studio">Noir Studio — For brand designers</option>
+<option value="Gradient Founder">Gradient Founder — For indie hackers</option>
+<option value="Swiss Grid">Swiss Grid — For architects, UX researchers</option>
+<option value="Terminal">Formal Ledger — For freelance writers</option>
+<option value="Color Pop">Color Pop — For illustrators, animators</option>
+<option value="Magazine">Magazine — For journalists, bloggers</option>
+<option value="Folio Circle">Folio Circle — For photographers</option>
 </select>
-<div id="tplDesc" class="tpl-desc"><i class="ri-information-line"></i> <span id="tplDescText">Clean & centered. For devs, designers.</span></div>
-<p style="font-size:11px;opacity:0.5;margin-top:8px;display:flex;gap:6px;align-items:center"><i class="ri-price-tag-3-line"></i> Current: <b id="tplName" style="color:#8A6BB5"></b></p>
+<div id="tplDesc" class="tpl-desc"><i class="ri-information-line"></i> <span id="tplDescText">Clean & centered.</span></div>
+<p style="font-size:11px;opacity:0.5;margin-top:8px;display:flex;gap:6px;align-items:center"><i class="ri-price-tag-3-line"></i> Current: <b id="tplName" style="color:#8A6BB5"></b> <span id="tplSyncBadge" style="display:none;background:#8A6BB5;color:#fff;padding:2px 8px;border-radius:20px;font-size:10px;margin-left:6px">Auto-synced</span></p>
 <div class="photo-wrap" style="margin-top:16px"><label for="photoInput" class="photo-label" id="photoBox"><span id="photoText"><i class="ri-image-add-line"></i> Photo</span><img id="photoPrev"/></label><label for="photoInput" class="camera-btn"><i class="ri-camera-line"></i></label><input type="file" id="photoInput" accept="image/*" style="display:none"/></div>
 <p id="uploadStatus" style="font-size:11px;color:#8A6BB5;margin-top:-10px;margin-bottom:10px;display:none"></p>
 <label>Full Name *</label><input id="wName" placeholder="e.g. Samuel Adeyemi"/>
@@ -80,20 +84,20 @@ label{display:block;font-size:11px;color:var(--sub);margin:12px 0 4px;text-trans
 <label>Email *</label><input id="wEmail" placeholder="alex@gmail.com"/>
 <label>Phone</label><input id="wPhone" placeholder="+234..."/>
 <label>Location</label><input id="wLocation" placeholder="Lagos, Nigeria"/>
-<label>Custom Link (Slug) *</label>
-<div class="slug-row"><input id="wSlug" placeholder="samuel-1234"/><button type="button" class="btn-ghost" style="margin:0" onclick="checkSlug()"><i class="ri-check-line"></i> Check</button></div>
-<p id="slugStatus" style="font-size:11px;margin-top:6px;color:var(--sub)">This will be your public URL</p>
+<label>Your Portfolio Username *</label>
+<div class="slug-row"><span class="slug-prefix">krative.site/</span><input id="wSlug" placeholder="samuel123"/><button type="button" class="btn-check-small" onclick="checkSlug()"><i class="ri-check-line"></i> Check</button></div>
+<p id="slugStatus" style="font-size:11px;margin-top:6px;color:var(--sub)">This will be your public link — choose something short like your name</p>
 <div class="actions"><button class="btn-next" onclick="goWizard(2)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
 <div id="w2" class="wizard-page"><div class="wizard-card"><h2>Socials</h2>
-<p style="font-size:11px;color:var(--sub);margin-bottom:10px;display:flex;gap:6px;align-items:center"><i class="ri-links-line"></i> All socials show in every template — photo + contact always visible</p>
+<p style="font-size:11px;color:var(--sub);margin-bottom:10px;display:flex;gap:6px;align-items:center"><i class="ri-links-line"></i> All socials show on home page in every template</p>
 <div class="social-row"><i class="ri-linkedin-box-line"></i><input id="wLinkedin" placeholder="LinkedIn URL"/></div>
 <div class="social-row"><i class="ri-github-line"></i><input id="wGithub" placeholder="GitHub URL"/></div>
 <div class="social-row"><i class="ri-twitter-x-line"></i><input id="wTwitter" placeholder="X / Twitter URL"/></div>
 <div class="social-row"><i class="ri-instagram-line"></i><input id="wInsta" placeholder="Instagram URL"/></div>
-<div class="social-row"><i class="ri-facebook-circle-line" style="color:#1877F2"></i><input id="wFacebook" placeholder="Facebook URL"/></div>
-<div class="social-row"><i class="ri-tiktok-line" style="color:var(--text)"></i><input id="wTiktok" placeholder="TikTok URL"/></div>
+<div class="social-row"><i class="ri-facebook-circle-line"></i><input id="wFacebook" placeholder="Facebook URL"/></div>
+<div class="social-row"><i class="ri-tiktok-line"></i><input id="wTiktok" placeholder="TikTok URL"/></div>
 <div class="social-row"><i class="ri-telegram-line"></i><input id="wTelegram" placeholder="Telegram URL"/></div>
-<div class="social-row"><i class="ri-whatsapp-line" style="color:#25D366"></i><input id="wWhatsapp" placeholder="WhatsApp wa.me/... URL"/></div>
+<div class="social-row"><i class="ri-whatsapp-line"></i><input id="wWhatsapp" placeholder="WhatsApp wa.me/... URL"/></div>
 <div class="actions"><button class="btn-back" onclick="goWizard(1)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(3)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
 <div id="w3" class="wizard-page"><div class="wizard-card"><h2>Bio</h2><textarea id="wBio" rows="4" placeholder="I help startups..."></textarea><input id="wRole" placeholder="Available for freelance" style="margin-top:10px"/><div class="actions"><button class="btn-back" onclick="goWizard(2)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(4)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
 <div id="w4" class="wizard-page"><div class="wizard-card"><h2>Education</h2><div id="eduList"></div><input id="eduSchool" placeholder="School"/><input id="eduDegree" placeholder="Degree" style="margin-top:8px"/><input id="eduYear" placeholder="Year" style="margin-top:8px"/><button class="btn-ghost" onclick="addEdu()"><i class="ri-add-line"></i> Add Education</button><div class="actions"><button class="btn-back" onclick="goWizard(3)"><i class="ri-arrow-left-line"></i> Back</button><button class="btn-next" onclick="goWizard(5)">Next <i class="ri-arrow-right-line"></i></button></div></div></div>
@@ -124,18 +128,30 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 if(localStorage.getItem('logged')!=='yes') location.href='auth.html';
 const themeBtn=document.getElementById('themeBtn');
-const savedTheme=localStorage.getItem('krative_theme')||'dark';
 function applyTheme(t){
   if(t==='light'){document.body.classList.add('light'); themeBtn.innerHTML='<i class="ri-sun-line"></i>';}
   else {document.body.classList.remove('light'); themeBtn.innerHTML='<i class="ri-moon-line"></i>';}
   localStorage.setItem('krative_theme',t);
 }
-applyTheme(savedTheme);
+applyTheme(localStorage.getItem('krative_theme')||'dark');
 themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
 let photoData=''; let uploadedPhotoUrl=''; let educations=[]; let works=[]; let projects=[];
 let editSlug = new URLSearchParams(location.search).get('edit');
 let isEditMode = !!editSlug;
 if(!editSlug) localStorage.removeItem('editSlug');
+
+// TEMPLATE SYNC FIX - read from URL and from templates.html localStorage
+(function syncTemplate(){
+  const urlTpl = new URLSearchParams(location.search).get('template');
+  const storedTpl = localStorage.getItem('selectedTemplate') || localStorage.getItem('template');
+  if(urlTpl){
+    localStorage.setItem('template', urlTpl);
+    localStorage.setItem('selectedTemplate', urlTpl);
+  } else if(storedTpl){
+    localStorage.setItem('template', storedTpl);
+  }
+})();
+
 const TPL_DESC = {
 'Minimal Dark': 'Clean & centered. For devs, designers, freelancers who want it simple.',
 'Kra-Pro Dark': 'Sidebar layout. For senior devs, product designers, consultants.',
@@ -150,10 +166,13 @@ const TPL_DESC = {
 'Magazine': 'Mag layout. For freelance journalists, bloggers, case-study designers.',
 'Folio Circle': 'Big circle focus. For photographers, makeup artists, visual freelancers.'
 };
-function getTpl(){ return document.getElementById('wTemplate').value || localStorage.getItem('template') || 'Minimal Dark'; }
+function getTpl(){ return document.getElementById('wTemplate').value || localStorage.getItem('template') || localStorage.getItem('selectedTemplate') || 'Minimal Dark'; }
 function changeTemplate(val){ 
   localStorage.setItem('template', val); 
+  localStorage.setItem('selectedTemplate', val);
   document.getElementById('tplDescText').innerText = TPL_DESC[val] || '';
+  document.getElementById('tplSyncBadge').style.display='inline-block';
+  setTimeout(()=>document.getElementById('tplSyncBadge').style.display='none',2000);
   renderFinal(); 
 }
 function getLiveData(){
@@ -192,11 +211,11 @@ document.getElementById('photoInput').addEventListener('change', async function(
 async function checkSlug(){
   const slug = document.getElementById('wSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   const status = document.getElementById('slugStatus');
-  if(!slug){ status.innerHTML='<i class="ri-error-warning-line"></i> Enter slug'; status.style.color='#ff4d4d'; return; }
+  if(!slug){ status.innerHTML='<i class="ri-error-warning-line"></i> Enter username'; status.style.color='#ff4d4d'; return; }
   status.innerHTML='<i class="ri-loader-4-line"></i> Checking...'; status.style.color='#777';
   const { data } = await supabaseClient.from('portfolios').select('slug').eq('slug',slug).maybeSingle();
   if(data && data.slug !== editSlug){ status.innerHTML='<i class="ri-close-circle-line"></i> Taken: '+slug; status.style.color='#ff4d4d'; }
-  else { status.innerHTML='<i class="ri-check-line"></i> Available: '+slug; status.style.color='#22c55e'; document.getElementById('wSlug').value=slug; }
+  else { status.innerHTML='<i class="ri-check-line"></i> Available: krative.site/'+slug; status.style.color='#22c55e'; document.getElementById('wSlug').value=slug; }
 }
 function addEdu(){ const s=eduSchool.value.trim(),d=eduDegree.value.trim(),y=eduYear.value.trim(); if(!s||!d||!y)return alert('Fill all'); educations.push({school:s,degree:d,year:y}); eduSchool.value=eduDegree.value=eduYear.value=''; renderEdu(); renderFinal(); }
 function renderEdu(){ eduList.innerHTML=educations.map((e,i)=>`<div style="background:var(--card);border:1px solid var(--border);padding:10px;border-radius:10px;margin-bottom:8px;display:flex;justify-content:space-between">${e.school} - ${e.degree} (${e.year}) <button onclick="educations.splice(${i},1);renderEdu();renderFinal()" style="background:var(--border);color:var(--text);border:none;padding:4px 8px;border-radius:6px"><i class="ri-close-line"></i></button></div>`).join(''); }
@@ -254,19 +273,44 @@ function renderProj(){
   </div>`).join(''); 
 }
 ['wName','wHeadline','wBio','wRole','wEmail','wPhone','wLocation','wSlug','wLinkedin','wGithub','wTwitter','wInsta','wFacebook','wTiktok','wTelegram','wWhatsapp'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', renderFinal); });
+
 function avatarHTML(d, size, radius, extra){
   if(d.photo) return `<img src="${d.photo}" style="width:${size};height:${size};border-radius:${radius};object-fit:cover;${extra||''}">`;
   return `<div style="width:${size};height:${size};border-radius:${radius};display:grid;place-items:center;font-weight:800;background:#222;color:#fff;${extra||''}">${(d.name||'A')[0].toUpperCase()}</div>`;
 }
+function socialsPreview(d){
+  const items=[];
+  if(d.github) items.push('<i class="ri-github-line"></i>');
+  if(d.linkedin) items.push('<i class="ri-linkedin-line"></i>');
+  if(d.twitter) items.push('<i class="ri-twitter-x-line"></i>');
+  if(d.insta) items.push('<i class="ri-instagram-line"></i>');
+  if(d.facebook) items.push('<i class="ri-facebook-line"></i>');
+  if(items.length===0) return '';
+  return `<div style="display:flex;gap:8px;margin-top:10px">${items.map(i=>`<span style="width:28px;height:28px;border-radius:100px;border:1px solid var(--border);display:grid;place-items:center;font-size:14px">${i}</span>`).join('')}</div>`;
+}
 function getTemplatePreview(tplName, d){
   const key = tplName.toLowerCase();
-  if(key.includes('minimal dark')) return {css:`body{background:#0A0A0A;color:#fff;font-family:Inter} .card{background:#111;border:1px solid #222;border-radius:16px;padding:16px}`,html:`<div style="padding:20px;display:grid;gap:16px"><div style="display:flex;gap:14px;align-items:flex-start">${avatarHTML(d,'68px','16px','border:1px solid #222;flex-shrink:0')}<div style="display:grid;gap:6px"><h1 style="font-size:22px;line-height:1.1">${d.name}</h1><p style="font-size:11px"><i class="ri-sparkling-line" style="color:#8A6BB5"></i> ${d.headline}</p></div></div><div style="display:grid;gap:10px">${(d.projects||[]).map(p=>`<div style="border:1px solid #222;border-radius:12px;overflow:hidden;background:#111">${p.image?`<img src="${p.image}" style="width:100%;height:100px;object-fit:cover">`:''}<div style="padding:10px"><b style="font-size:12px">${p.title}</b></div></div>`).join('')||'<p style="font-size:11px;color:#777">No projects yet</p>'}</div></div>`};
-  return {css:`body{background:#0A0A0A;color:#fff;font-family:Inter}`,html:`<div style="padding:20px"><div style="display:flex;gap:12px">${avatarHTML(d,'60px','16px','')}<div><h1>${d.name}</h1><p style="font-size:11px;color:#777">${d.headline}</p></div></div><div style="margin-top:16px;display:grid;gap:10px">${(d.projects||[]).map(p=>`<div style="border:1px solid #222;border-radius:12px;overflow:hidden"><img src="${p.image}" style="width:100%;height:120px;object-fit:cover"><div style="padding:8px"><b>${p.title}</b></div></div>`).join('')}</div></div>`};
+  const social = socialsPreview(d);
+  const projs = (d.projects||[]).map(p=>`<div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card)">${p.image?`<img src="${p.image}" style="width:100%;height:90px;object-fit:cover">`:''}<div style="padding:8px"><b style="font-size:11px">${p.title}</b></div></div>`).join('') || '<p style="font-size:11px;color:var(--sub)">No projects yet</p>';
+  if(key.includes('minimal')) return {css:`:root{--bg:#0A0A0A;--card:#111;--border:#222;--text:#fff;--sub:#777} body{background:var(--bg)!important;color:var(--text)!important}`,html:`<div style="padding:20px"><div style="display:flex;gap:14px">${avatarHTML(d,'68px','16px')}<div><h2>${d.name}</h2><p style="font-size:11px;color:var(--sub)">${d.headline}</p>${social}</div></div><div style="margin-top:16px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('kra-pro')) return {css:`:root{--bg:#0C0C0F;--card:#15151d;--border:#23232f;--text:#fff;--sub:#888} body{background:var(--bg)!important;color:var(--text)!important}`,html:`<div style="padding:20px"><h1 style="font-size:36px">${d.name}<br><span style="color:#8A6BB5">${d.headline}</span></h1><p style="color:var(--sub);margin-top:8px">${d.bio||''}</p>${social}<div style="margin-top:16px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('bold')) return {css:`body{background:#F9F6F1;color:#111;font-family:serif}`,html:`<div style="padding:20px;border-top:4px solid #111"><h1 style="font-size:42px">${d.name}</h1><p style="font-style:italic;color:#666">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('grid')) return {css:`body{background:#0A0A0A;color:#fff}`,html:`<div style="padding:20px;border:1px solid #222;margin:12px;border-radius:14px"><div style="display:flex;gap:12px"><div style="width:32px;height:32px;background:#fff;color:#000;display:grid;place-items:center;border-radius:8px;font-weight:800">${d.name[0]}</div><b>GRID</b></div><h1 style="margin-top:16px">${d.name}</h1><p style="color:#777">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">${projs}</div></div>`};
+  if(key.includes('neo')) return {css:`body{background:#FFFE00;color:#111}`,html:`<div style="padding:12px"><div style="border:3px solid #111;background:#fff;padding:8px"><b>KRATIVE</b></div><h1 style="margin-top:12px;font-size:32px;border:3px solid #111;background:#fff;display:inline-block;padding:4px 8px">${d.name}</h1><p style="background:#111;color:#FFFE00;display:inline-block;padding:4px 8px;margin-top:8px">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('noir')) return {css:`body{background:#050505;color:#fff;text-align:center}`,html:`<div style="padding:20px"><div style="margin:0 auto">${avatarHTML(d,'80px','100%','margin:0 auto')}<h1 style="margin-top:12px;letter-spacing:2px;font-weight:300">${d.name}</h1><p style="color:#777">${d.headline}</p>${social}<div style="margin-top:12px">${projs}</div></div></div>`};
+  if(key.includes('gradient')) return {css:`body{background:#0A0A0A;color:#fff}`,html:`<div style="padding:20px"><h1 style="background:linear-gradient(90deg,#8A6BB5,#ff7a7a);-webkit-background-clip:text;color:transparent;font-size:32px">${d.name}</h1><p style="color:#777">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('swiss')) return {css:`body{background:#f5f5f5;color:#111;font-family:monospace}`,html:`<div style="padding:0;border:2px solid #111;margin:12px"><div style="border-bottom:2px solid #111;padding:12px;display:flex;gap:8px"><b>SWISS_${d.name[0]}</b></div><div style="padding:16px"><h1>${d.name}</h1><p style="color:#666">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div></div>`};
+  if(key.includes('terminal')) return {css:`body{background:#0A0A0A;color:#00FF88;font-family:monospace}`,html:`<div style="padding:16px;border:1px dashed #222;margin:12px"><p>> whoami</p><h1>${d.name}</h1><p style="color:#777">$ cat bio.txt<br>${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('color')) return {css:`body{background:#FFFEF2;color:#111}`,html:`<div style="padding:12px"><div style="background:#FFFE00;border:3px solid #111;border-radius:100px;padding:8px 12px;display:inline-block"><b>POP! ${d.name[0]}</b></div><h1 style="margin-top:12px;font-size:32px">${d.name} <span style="background:#FFFE00;border:2px solid #111;padding:0 6px">!</span></h1><p style="border:2px solid #111;background:#fff;padding:6px 10px;margin-top:8px">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('magazine')) return {css:`body{background:#0A0A0A;color:#fff;font-family:serif}`,html:`<div style="padding:16px;border-top:4px solid #fff"><span style="font-size:10px;letter-spacing:3px">THE</span><h1 style="font-size:36px">KRATIVE • ${d.name.split(' ').pop()?.toUpperCase()||''}</h1><p style="color:#777;margin-top:8px">${d.bio||''}</p>${social}<div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  if(key.includes('folio')) return {css:`body{background:#0A0A0A;color:#fff;text-align:center}`,html:`<div style="padding:20px"><div style="background:#111;border:1px solid #222;border-radius:100px;padding:8px;display:inline-flex;gap:6px"><div style="width:24px;height:24px;border-radius:100%;background:#fff;color:#000;display:grid;place-items:center">${d.name[0]}</div><span>Home</span></div><div style="margin-top:16px">${avatarHTML(d,'100px','100%','margin:0 auto')}<h1 style="margin-top:12px">${d.name}</h1><p style="color:#777">${d.bio||''}</p>${social}</div><div style="margin-top:12px;display:grid;gap:8px">${projs}</div></div>`};
+  return {css:`body{background:#0A0A0A;color:#fff}`,html:`<div style="padding:20px"><h1>${d.name}</h1><p style="color:#777">${d.headline}</p>${social}<div style="margin-top:12px">${projs}</div></div>`};
 }
 function renderFinal(){
   const tpl=getTpl();
   document.getElementById('tplName').innerText=tpl;
   document.getElementById('tplDescText').innerText = TPL_DESC[tpl] || '';
+  document.getElementById('wTemplate').value = tpl; // SYNC SELECT
   document.getElementById('previewTitle').innerHTML=`<i class="ri-eye-line"></i> Preview — ${tpl} (Live)`;
   const d = getLiveData();
   const t = getTemplatePreview(tpl, d);
@@ -276,7 +320,7 @@ function renderFinal(){
 async function loadForEdit(){
   if(!isEditMode) return;
   document.getElementById('pageTitle').innerText = 'Edit Portfolio';
-  document.getElementById('pageSub').innerHTML = '<i class="ri-edit-line"></i> Edit slug, template, and all info. 1 click update.';
+  document.getElementById('pageSub').innerHTML = '<i class="ri-edit-line"></i> Edit your username, template, and info. 1 click update.';
   document.getElementById('pubBtn').innerHTML = '<i class="ri-edit-line"></i> Update Portfolio';
   try{
     const {data,error} = await supabaseClient.from('portfolios').select('*').eq('slug',editSlug).single();
@@ -285,7 +329,7 @@ async function loadForEdit(){
     document.getElementById('wLinkedin').value=data.linkedin||''; document.getElementById('wGithub').value=data.github||''; document.getElementById('wTwitter').value=data.twitter||''; document.getElementById('wInsta').value=data.insta||''; document.getElementById('wFacebook').value=data.facebook||''; document.getElementById('wTiktok').value=data.tiktok||''; document.getElementById('wTelegram').value=data.telegram||''; document.getElementById('wWhatsapp').value=data.whatsapp||'';
     if(data.photo){ photoData=data.photo; uploadedPhotoUrl=data.photo; document.getElementById('photoPrev').src=data.photo; document.getElementById('photoPrev').style.display='block'; document.getElementById('photoBox').classList.add('has-photo'); }
     educations=data.educations||[]; works=data.works||[]; projects=data.projects||[];
-    if(data.template){ localStorage.setItem('template',data.template); document.getElementById('wTemplate').value=data.template; }
+    if(data.template){ localStorage.setItem('template',data.template); localStorage.setItem('selectedTemplate',data.template); document.getElementById('wTemplate').value=data.template; }
     renderEdu(); renderWork(); renderProj(); renderFinal();
   }catch(e){ document.getElementById('publishError').style.display='block'; document.getElementById('publishError').innerHTML='<i class="ri-error-warning-line"></i> Could not load edit: '+e.message; }
 }
@@ -300,20 +344,26 @@ async function publish(){
   if(pendingProjTitle){ const imgVal = document.getElementById('projImage').value.trim() || tempProjImageUrl; projects.push({title:pendingProjTitle, desc:projDesc.value.trim(), link:projLink.value.trim(), image:imgVal}); projTitle.value=projDesc.value=projLink.value=projImage.value=''; renderProj(); }
   if(!wName.value.trim()){ alert('Enter name'); goWizard(1); return; }
   if(!wEmail.value.trim()){ alert('Enter email'); goWizard(1); return; }
-  if(!document.getElementById('wSlug').value.trim()){ alert('Enter custom slug'); goWizard(1); return; }
+  if(!document.getElementById('wSlug').value.trim()){ alert('Enter username'); goWizard(1); return; }
   if(educations.length===0){ alert('Add at least 1 Education'); goWizard(4); return; }
   if(works.length===0){ alert('Add at least 1 Work'); goWizard(5); return; }
-  btn.innerHTML='<i class="ri-loader-4-line"></i> Publishing...'; btn.disabled=true;
-  shareBox.innerHTML='<div style="padding:12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px"><i class="ri-loader-4-line"></i> Publishing...</div>';
+  
+  if(isEditMode){
+    btn.innerHTML='<i class="ri-loader-4-line"></i> Updating...'; // UPDATING TEXT FIX
+  } else {
+    btn.innerHTML='<i class="ri-loader-4-line"></i> Publishing...';
+  }
+  btn.disabled=true;
+  shareBox.innerHTML='<div style="padding:12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px"><i class="ri-loader-4-line"></i> '+(isEditMode?'Updating...':'Publishing...')+'</div>';
   try{
     let finalSlug = document.getElementById('wSlug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
     const payload={ slug: finalSlug, name:wName.value, headline:wHeadline.value, bio:wBio.value, role:wRole.value, email:wEmail.value, phone:wPhone.value||null, location:wLocation.value||null, linkedin:document.getElementById('wLinkedin')?.value||null, github:document.getElementById('wGithub')?.value||null, twitter:document.getElementById('wTwitter')?.value||null, insta:document.getElementById('wInsta')?.value||null, facebook:document.getElementById('wFacebook')?.value||null, tiktok:document.getElementById('wTiktok')?.value||null, telegram:document.getElementById('wTelegram')?.value||null, whatsapp:document.getElementById('wWhatsapp')?.value||null, photo:uploadedPhotoUrl || photoData || null, educations:educations, works:works, projects:projects, template:getTpl(), owner_email:localStorage.getItem('userEmail')||wEmail.value };
     if(isEditMode){
-      if(finalSlug !== editSlug){ const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Slug already taken: '+finalSlug); }
+      if(finalSlug !== editSlug){ const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Username taken: '+finalSlug); }
       const {error}=await supabaseClient.from('portfolios').update(payload).eq('slug',editSlug); if(error) throw error;
-      shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #22c55e;border-radius:12px"><b><i class="ri-check-line"></i> Updated!</b><p style="font-size:12px;color:var(--sub);margin-top:6px">Slug: ${finalSlug} | Template: ${payload.template}</p><div style="margin-top:12px"><button onclick="location.href='dashboard.html'" style="width:100%;padding:12px;border-radius:100px;background:var(--text);color:var(--bg);font-weight:700;border:none;cursor:pointer"><i class="ri-dashboard-line"></i> Go to Dashboard</button></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Updated'; localStorage.removeItem('editSlug');
+      shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #22c55e;border-radius:12px"><b><i class="ri-check-line"></i> Updated!</b><p style="font-size:12px;color:var(--sub);margin-top:6px">Username: ${finalSlug} | Template: ${payload.template}</p><div style="margin-top:12px"><button onclick="location.href='dashboard.html'" style="width:100%;padding:12px;border-radius:100px;background:var(--text);color:var(--bg);font-weight:700;border:none;cursor:pointer"><i class="ri-dashboard-line"></i> Go to Dashboard</button></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Updated'; localStorage.removeItem('editSlug');
     } else {
-      const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Slug taken, choose another');
+      const { data: exists } = await supabaseClient.from('portfolios').select('slug').eq('slug',finalSlug).maybeSingle(); if(exists) throw new Error('Username taken, choose another');
       const {error}=await supabaseClient.from('portfolios').insert({...payload, views:0}); if(error) throw error;
       const link = `${location.origin}${location.pathname.replace(/\/[^\/]*$/, '')}/portfolio.html?user=${finalSlug}`;
       shareBox.innerHTML=`<div style="padding:16px;background:var(--card);border:1px solid #8A6BB5;border-radius:12px"><b><i class="ri-rocket-2-line"></i> Published!</b><p style="font-size:11px;color:var(--sub);margin-top:6px">Your link:</p><div style="display:flex;gap:8px;background:var(--bg);padding:8px;border-radius:8px;margin-top:8px;border:1px solid var(--border)"><input value="${link}" readonly style="flex:1;background:transparent;border:none;color:#8A6BB5;font-size:11px"><button onclick="navigator.clipboard.writeText('${link}')" style="background:#8A6BB5;color:#fff;border:none;padding:6px 10px;border-radius:6px"><i class="ri-file-copy-line"></i> Copy</button></div><div style="margin-top:10px;display:flex;gap:8px"><a href="${link}" target="_blank" style="flex:1;text-align:center;background:var(--text);color:var(--bg);padding:10px;border-radius:100px;font-weight:700;font-size:12px"><i class="ri-external-link-line"></i> Open Portfolio</a></div></div>`; btn.innerHTML='<i class="ri-check-line"></i> Published';
@@ -321,6 +371,8 @@ async function publish(){
   }catch(e){ errBox.style.display='block'; errBox.innerHTML='<i class="ri-error-warning-line"></i> Error: '+e.message; shareBox.innerHTML=''; btn.innerHTML=isEditMode?'<i class="ri-edit-line"></i> Update Portfolio':'<i class="ri-rocket-2-line"></i> Publish'; btn.disabled=false; }
 }
 loadForEdit(); 
+// init template from sync
+document.getElementById('wTemplate').value = getTpl();
 changeTemplate(getTpl());
 renderFinal();
 </script>

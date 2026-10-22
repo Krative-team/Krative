@@ -125,10 +125,10 @@ const mainActionLink=document.getElementById('mainActionLink');
 
 // FIRST BUTTON: must login before dashboard
 if(logged){
-  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Go to Dashboard';
+  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Back to Dashboard';
   createLink.href='dashboard.html';
 } else {
-  createBtn.innerHTML='<i class="ri-compass-3-line"></i> Explore Templates';
+  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Access Dashboard';
   createLink.href='auth.html';
 }
 

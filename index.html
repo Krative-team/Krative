@@ -6,8 +6,6 @@
 <title>Krative — Portfolio Builder for Freelancers</title>
 <meta name="description" content="Krative is an official free portfolio builder for freelancers. Build and publish in 2 mins. Official site: krative-team.github.io/Krative/ Contact: etoabasis@gmail.com" />
 <link rel="canonical" href="https://krative-team.github.io/Krative/" />
-
-<!-- LINK PREVIEW / SEO FIX - SAFE HOST -->
 <meta property="og:title" content="Krative — Portfolio Builder for Freelancers" />
 <meta property="og:description" content="Free, quick publish, no code required. Choose a template, fill info, publish in 2 minutes. Official Krative project." />
 <meta property="og:image" content="https://krative-team.github.io/Krative/IMG-2840.jpg" />
@@ -21,7 +19,6 @@
 <meta name="twitter:title" content="Krative — Portfolio Builder" />
 <meta name="twitter:description" content="Build a portfolio that gets you hired in 2 mins. Official Krative." />
 <meta name="twitter:image" content="https://krative-team.github.io/Krative/IMG-2840.jpg" />
-
 <link rel="stylesheet" href="style.css" />
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"/>
@@ -78,7 +75,7 @@ a{text-decoration:none !important}
 <nav class="navbar"><div class="logo">Krative<span>.</span></div><div class="navbar-actions"><button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button><button class="btn-white" id="authBtn">Login</button></div></nav>
 
 <div class="new-portfolio-wrap">
-<a id="createLink" href="templates.html" style="text-decoration:none !important"><button id="createBtn"><i class="ri-compass-3-line"></i> Explore Templates</button></a>
+<a id="createLink" href="auth.html" style="text-decoration:none !important"><button id="createBtn"><i class="ri-compass-3-line"></i> Explore Templates</button></a>
 <div class="labels-row"><span class="label-chip"><i class="ri-vip-diamond-line"></i> Premium Templates</span><span class="label-chip"><i class="ri-palette-line"></i> No-code Customizable</span><span class="label-chip"><i class="ri-share-line"></i> Sharable Link</span><span class="label-chip"><i class="ri-flashlight-line"></i> Publish in 2 mins</span></div>
 </div>
 
@@ -118,14 +115,27 @@ applyTheme(localStorage.getItem('krative_theme')||'dark');
 themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark':'light');
 window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) applyTheme(e.newValue); });
 window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
+
+// === AUTH LOGIC: FIRST BUTTON ONLY ===
 const logged=localStorage.getItem('logged')==='yes';
 document.getElementById('authBtn').innerText=logged?'Logout':'Login';
+
 const createLink=document.getElementById('createLink');
 const createBtn=document.getElementById('createBtn');
+const mainActionLink=document.getElementById('mainActionLink');
+
+// FIRST BUTTON: must login before dashboard
 if(logged){
   createBtn.innerHTML='<i class="ri-dashboard-line"></i> Proceed to Dashboard';
   createLink.href='dashboard.html';
+} else {
+  createBtn.innerHTML='<i class="ri-compass-3-line"></i> Explore Templates';
+  createLink.href='auth.html';
 }
+
+// SECOND BUTTON: always templates
+mainActionLink.href='templates.html';
+
 const modal=document.getElementById('logoutModal');
 document.getElementById('authBtn').onclick=()=>{
   if(logged){ modal.classList.add('show'); }

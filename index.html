@@ -75,7 +75,7 @@ a{text-decoration:none !important}
 <nav class="navbar"><div class="logo">Krative<span>.</span></div><div class="navbar-actions"><button class="theme-btn" id="themeBtn"><i class="ri-moon-line"></i></button><button class="btn-white" id="authBtn">Login</button></div></nav>
 
 <div class="new-portfolio-wrap">
-<a id="createLink" href="auth.html" style="text-decoration:none !important"><button id="createBtn"><i class="ri-compass-3-line"></i> Go to Dashboard</button></a>
+<a id="createLink" href="auth.html" style="text-decoration:none !important"><button id="createBtn"><i class="ri-compass-3-line"></i> Explore Templates</button></a>
 <div class="labels-row"><span class="label-chip"><i class="ri-vip-diamond-line"></i> Premium Templates</span><span class="label-chip"><i class="ri-palette-line"></i> No-code Customizable</span><span class="label-chip"><i class="ri-share-line"></i> Sharable Link</span><span class="label-chip"><i class="ri-flashlight-line"></i> Publish in 2 mins</span></div>
 </div>
 
@@ -116,7 +116,6 @@ themeBtn.onclick=()=>applyTheme(document.body.classList.contains('light')?'dark'
 window.addEventListener('storage',e=>{ if(e.key==='krative_theme'&&e.newValue) applyTheme(e.newValue); });
 window.addEventListener('pageshow',()=>applyTheme(localStorage.getItem('krative_theme')||'dark'));
 
-// === AUTH LOGIC: FIRST BUTTON ONLY ===
 const logged=localStorage.getItem('logged')==='yes';
 document.getElementById('authBtn').innerText=logged?'Logout':'Login';
 
@@ -126,7 +125,7 @@ const mainActionLink=document.getElementById('mainActionLink');
 
 // FIRST BUTTON: must login before dashboard
 if(logged){
-  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Proceed to Dashboard';
+  createBtn.innerHTML='<i class="ri-dashboard-line"></i> Go to Dashboard';
   createLink.href='dashboard.html';
 } else {
   createBtn.innerHTML='<i class="ri-compass-3-line"></i> Explore Templates';
